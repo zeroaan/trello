@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     boxShadow: "none",
   },
   toolbar: {
@@ -33,16 +33,35 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: "6px 15px",
-    backgroundColor: "rgba(98,102,104, 0.5)",
+    backgroundColor: "rgba(154,160,163, 0.9)",
     height: "35px",
     textTransform: "none",
+    "&:hover": {
+      backgroundColor: "rgba(140,147,150, 0.9)",
+    },
   },
-  iconbutton: {
+  homeiconbutton: {
+    marginTop: "8px",
+    width: "30px",
+    height: "30px",
+    "&:hover": {
+      background: "none",
+    },
+  },
+  addiconbutton: {
     margin: "0px 15px",
-    backgroundColor: "rgba(98,102,104, 0.5)",
+    backgroundColor: "rgba(154,160,163, 0.9)",
     width: "35px",
     height: "35px",
     borderRadius: "5px",
+    "&:hover": {
+      backgroundColor: "rgba(140,147,150, 0.9)",
+    },
+  },
+  typography: {
+    fontFamily: `"Jua", sans-serif`,
+    position: "relative",
+    right: "20px",
   },
 }));
 
@@ -54,16 +73,18 @@ const Navbar = () => {
       <AppBar className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.div}>
-            <IconButton color="inherit">
+            <IconButton className={classes.homeiconbutton} color="inherit">
               <HomeIcon />
             </IconButton>
             <Button className={classes.button} color="inherit">
               Boards
             </Button>
           </div>
-          <Typography variant="h6">Trello</Typography>
+          <Typography className={classes.typography} variant="h6">
+            Trello
+          </Typography>
           <div className={classes.div}>
-            <IconButton className={classes.iconbutton} color="inherit">
+            <IconButton className={classes.addiconbutton} color="inherit">
               <AddIcon />
             </IconButton>
             <Avatar className={classes.avatar}>A</Avatar>
