@@ -13,7 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    boxShadow: "none",
   },
   toolbar: {
     display: "flex",
