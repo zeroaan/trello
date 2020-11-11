@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    minHeight: "50px",
+    minHeight: "48px",
   },
   avatar: {
     backgroundColor: "rgb(223,225,230)",
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   button: {
-    margin: "7px 15px",
+    margin: "6px 15px",
     backgroundColor: "rgba(98,102,104, 0.5)",
     height: "35px",
     textTransform: "none",
