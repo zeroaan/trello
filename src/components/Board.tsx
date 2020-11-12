@@ -71,6 +71,11 @@ const Board = () => {
 
   const [boardName, setBoardName] = useState("name");
   const [textInput, setTextInput] = useState("invisible");
+  const lists = useState([
+    { title: "To do", list: ["todo", "testing", "post", "hello"] },
+    { title: "Doing", list: ["wowwowo", "doing"] },
+    { title: "Complete", list: ["pratice", "what", "comp"] },
+  ])[0];
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
@@ -142,7 +147,11 @@ const Board = () => {
             />
           </form>
         </div>
-        <List />
+        <div style={{ display: "flex" }}>
+          {lists.map((v, i) => (
+            <List key={i} title={v.title} list={v.list} />
+          ))}
+        </div>
       </div>
     </>
   );
