@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(235,236,240)",
     width: "300px",
     height: "100%",
-    margin: "0 16px",
+    margin: "0 0 0 16px",
   },
   listName: {
     fontSize: "18px",

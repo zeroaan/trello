@@ -4,6 +4,7 @@ import List from "components/List";
 import "app.css";
 
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     whiteSpace: "pre",
   },
-  button: {
+  starBt: {
     margin: "0 16px",
     backgroundColor: "rgba(154,160,163, 0.9)",
     width: "35px",
@@ -60,6 +61,18 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     fontWeight: "bold",
     cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "rgba(171,177,180, 0.9)",
+    },
+  },
+  addBt: {
+    margin: "0 0 0 16px",
+    flexShrink: 0,
+    width: "300px",
+    height: "40px",
+    textTransform: "none",
+    backgroundColor: "rgb(161,168,171)",
+    color: "white",
     "&:hover": {
       backgroundColor: "rgba(171,177,180, 0.9)",
     },
@@ -122,7 +135,7 @@ const Board = () => {
           <button
             ref={stEl}
             style={{ color: "white" }}
-            className={classes.button}
+            className={classes.starBt}
             onClick={onClickStar}
           >
             ☆
@@ -151,6 +164,11 @@ const Board = () => {
           {lists.map((v, i) => (
             <List key={i} title={v.title} list={v.list} />
           ))}
+          <Button className={classes.addBt} disableRipple>
+            <div style={{ position: "absolute", left: "20px" }}>
+              + Add a List
+            </div>
+          </Button>
         </div>
       </div>
     </>
