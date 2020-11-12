@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useRef } from "react";
+import List from "components/List";
 import "app.css";
 
 import Typography from "@material-ui/core/Typography";
@@ -16,36 +17,52 @@ const useStyles = makeStyles((theme) => ({
   },
   boardName: {
     display: "flex",
+    marginBottom: "12px",
   },
   boardNameText: {
-    padding: "2px 20px",
+    position: "absolute",
+    top: 0,
+    left: "60px",
+    padding: "4px 12px 2px 12px",
     flex: "0 1 auto",
     color: "white",
     borderRadius: "5px",
     fontFamily: `"Jua", sans-serif`,
     cursor: "pointer",
     fontSize: "18px",
+    whiteSpace: "pre",
     "&:hover": {
       backgroundColor: "rgba(154,160,163, 0.9)",
     },
   },
-  boardNameForm: {},
+  boardNameForm: {
+    position: "absolute",
+    top: 0,
+    left: "60px",
+  },
   boardNameInput: {
-    padding: "0 20px",
+    padding: "0 12px",
     outline: "none",
     border: "none",
     borderRadius: "5px",
     height: "34px",
     fontSize: "18px",
+    whiteSpace: "pre",
   },
-  boardNameWidth: {
-    fontSize: "18px",
-    color: "rgba(0,0,0,0)",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    userSelect: "none",
-    zIndex: -1,
+  button: {
+    margin: "0 16px",
+    backgroundColor: "rgba(154,160,163, 0.9)",
+    width: "35px",
+    height: "35px",
+    textTransform: "none",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "rgba(171,177,180, 0.9)",
+    },
   },
 }));
 
@@ -53,21 +70,19 @@ const Board = () => {
   const classes = useStyles();
 
   const [boardName, setBoardName] = useState("name");
-  const [text, setText] = useState("");
   const [textInput, setTextInput] = useState("invisible");
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
+  const stEl = useRef<HTMLButtonElement>(null);
 
   const onClickText = () => {
-    setText("invisible");
     setTextInput("");
     if (bnEl.current && wtEl.current) {
-      bnEl.current.style.width = wtEl.current.scrollWidth + 4 + "px";
+      bnEl.current.style.width = wtEl.current.scrollWidth - 24 + "px";
     }
   };
   const onBlurInput = () => {
-    setText("");
     setTextInput("invisible");
     if (boardName === "") {
       setBoardName("My Board");
@@ -75,7 +90,6 @@ const Board = () => {
   };
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setText("");
     setTextInput("invisible");
   };
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +97,16 @@ const Board = () => {
     setBoardName(value);
 
     if (bnEl.current && wtEl.current) {
-      bnEl.current.style.width = wtEl.current.scrollWidth + 24 + "px";
+      bnEl.current.style.width = wtEl.current.scrollWidth - 8 + "px";
+    }
+  };
+  const onClickStar = () => {
+    if (stEl.current) {
+      if (stEl.current.style.color === "white") {
+        stEl.current.style.color = "yellow";
+      } else if (stEl.current.style.color === "yellow") {
+        stEl.current.style.color = "white";
+      }
     }
   };
 
@@ -91,21 +114,26 @@ const Board = () => {
     <>
       <div className={classes.screen}>
         <div className={classes.boardName}>
+          <button
+            ref={stEl}
+            style={{ color: "white" }}
+            className={classes.button}
+            onClick={onClickStar}
+          >
+            ☆
+          </button>
           <Typography
-            id={text}
+            ref={wtEl}
             className={classes.boardNameText}
             variant="h6"
             onClick={onClickText}
           >
             {boardName}
           </Typography>
-          <form
-            className={classes.boardNameForm}
-            id={textInput}
-            onSubmit={onSubmitForm}
-          >
+          <form className={classes.boardNameForm} onSubmit={onSubmitForm}>
             <input
               ref={bnEl}
+              id={textInput}
               className={classes.boardNameInput}
               value={boardName}
               onChange={onChangeName}
@@ -113,10 +141,8 @@ const Board = () => {
               onBlur={onBlurInput}
             />
           </form>
-          <span ref={wtEl} className={classes.boardNameWidth}>
-            {boardName}
-          </span>
         </div>
+        <List />
       </div>
     </>
   );
