@@ -1,9 +1,17 @@
 import { ADD_LIST } from "../actions/types";
 import { AddListAction } from "../actions/list";
 
-interface InitialState {}
+export interface ListState {
+  lists: { title: string; list: string[] }[];
+}
 
-const initialState: InitialState = {};
+const initialState: ListState = {
+  lists: [
+    { title: "To do", list: ["doing", "test", "post", "hello"] },
+    { title: "Doing", list: ["wowwowo", "doing"] },
+    { title: "Complete", list: ["pratice", "what", "comp"] },
+  ],
+};
 
 type ListReducerActions = AddListAction;
 export default (state = initialState, action: ListReducerActions) => {

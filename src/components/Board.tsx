@@ -1,5 +1,8 @@
 import React from "react";
 import { useState, useRef } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers";
+import { ListState } from "store/reducers/list";
 import List from "components/List";
 import "app.css";
 
@@ -84,11 +87,7 @@ const Board = () => {
 
   const [boardName, setBoardName] = useState("name");
   const [textInput, setTextInput] = useState("invisible");
-  const lists = useState([
-    { title: "To do", list: ["todo", "testing", "post", "hello"] },
-    { title: "Doing", list: ["wowwowo", "doing"] },
-    { title: "Complete", list: ["pratice", "what", "comp"] },
-  ])[0];
+  const { lists } = useSelector<RootState, ListState>((store) => store.list);
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
@@ -161,7 +160,7 @@ const Board = () => {
           </form>
         </div>
         <div style={{ display: "flex" }}>
-          {lists.map((v, i) => (
+          {lists.map((v: { title: string; list: string[] }, i: number) => (
             <List key={i} title={v.title} list={v.list} />
           ))}
           <Button className={classes.addBt} disableRipple>
