@@ -132,8 +132,11 @@ const List: React.FC<Props> = ({ title, list }) => {
     dispatch(changeTitle(title, textTitle));
   };
   const onBlurInput = () => {
-    if (textInput.current) {
-      textInput.current.style.display = "none";
+    if (textTitle !== "") {
+      if (textInput.current) {
+        textInput.current.style.display = "none";
+      }
+      dispatch(changeTitle(title, textTitle));
     }
   };
   const onClickAddBt = () => {
@@ -183,6 +186,7 @@ const List: React.FC<Props> = ({ title, list }) => {
             onChange={onChangeInput}
             required
             onBlur={onBlurInput}
+            maxLength={15}
           />
         </form>
         <button className={classes.menuBt}>⋯</button>
