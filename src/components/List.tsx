@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import ListCard from "components/ListCard";
 
 import { useDispatch } from "react-redux";
@@ -115,6 +115,10 @@ const List: React.FC<Props> = ({ title, list, index }) => {
   const cardAdd = useRef<HTMLButtonElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
   const cardInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setTextTitle(title);
+  }, [title]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
