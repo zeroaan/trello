@@ -194,7 +194,7 @@ const List: React.FC<Props> = ({ title, list }) => {
           style={{ padding: "0 12px", overflow: "auto", maxHeight: "375px" }}
         >
           {list.map((v, i) => (
-            <ListCard key={i} list={v} />
+            <ListCard key={i} list={v} index={i} />
           ))}
         </CardContent>
         <CardActions>

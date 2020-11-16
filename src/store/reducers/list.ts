@@ -1,8 +1,14 @@
-import { CHANGE_TITLE, ADD_CARD, EDIT_CARD } from "../actions/types";
+import {
+  CHANGE_TITLE,
+  ADD_CARD,
+  EDIT_CARD,
+  DELETE_CARD,
+} from "../actions/types";
 import {
   ChangeTitleAction,
   AddCardAction,
   EditCardAction,
+  DeleteCardAction,
 } from "../actions/list";
 
 export interface ListState {
@@ -20,7 +26,11 @@ const initialState: ListState = {
   ],
 };
 
-type ListReducerActions = ChangeTitleAction | AddCardAction | EditCardAction;
+type ListReducerActions =
+  | ChangeTitleAction
+  | AddCardAction
+  | EditCardAction
+  | DeleteCardAction;
 const listReducer = (state = initialState, action: ListReducerActions) => {
   switch (action.type) {
     case CHANGE_TITLE: {
@@ -51,13 +61,19 @@ const listReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < state.lists.length) {
         if (state.lists[i].title === action.title) {
-          let j = 0;
-          while (j < state.lists[i].list.length) {
-            if (state.lists[i].list[j] === action.card) {
-              newLists[i].list[j] = action.newCard;
-            }
-            j = j + 1;
-          }
+          newLists[i].list[action.index] = action.newCard;
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, lists: [...newLists] };
+    }
+    case DELETE_CARD: {
+      const newLists = [...state.lists];
+      let i = 0;
+      while (i < state.lists.length) {
+        if (state.lists[i].title === action.title) {
+          newLists[i].list.splice(action.index, 1);
         }
         i = i + 1;
       }

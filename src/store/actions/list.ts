@@ -1,4 +1,9 @@
-import { CHANGE_TITLE, ADD_CARD, EDIT_CARD } from "../actions/types";
+import {
+  CHANGE_TITLE,
+  ADD_CARD,
+  EDIT_CARD,
+  DELETE_CARD,
+} from "../actions/types";
 
 export interface ChangeTitleAction {
   type: typeof CHANGE_TITLE;
@@ -15,8 +20,14 @@ export interface AddCardAction {
 export interface EditCardAction {
   type: typeof EDIT_CARD;
   title: string;
-  card: string;
   newCard: string;
+  index: number;
+}
+
+export interface DeleteCardAction {
+  type: typeof DELETE_CARD;
+  title: string;
+  index: number;
 }
 
 export const changeTitle = (title: string, newTitle: string) => {
@@ -35,11 +46,19 @@ export const addCard = (title: string, card: string) => {
   };
 };
 
-export const editCard = (title: string, card: string, newCard: string) => {
+export const editCard = (title: string, newCard: string, index: number) => {
   return {
     type: EDIT_CARD,
     title,
-    card,
     newCard,
+    index,
+  };
+};
+
+export const deleteCard = (title: string, index: number) => {
+  return {
+    type: DELETE_CARD,
+    title,
+    index,
   };
 };

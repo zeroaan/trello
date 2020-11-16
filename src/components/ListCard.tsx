@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRef } from "react";
 
 import { useDispatch } from "react-redux";
-import { editCard } from "../store/actions/list";
+import { editCard, deleteCard } from "../store/actions/list";
 
 import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
@@ -103,9 +103,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   list: string;
+  index: number;
 }
 
-const ListCard: React.FC<Props> = ({ list }) => {
+const ListCard: React.FC<Props> = ({ list, index }) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -150,7 +151,19 @@ const ListCard: React.FC<Props> = ({ list }) => {
     if (editBlack.current) {
       editBlack.current.style.display = "none";
     }
-    dispatch(editCard(listTitle, list, editList));
+    dispatch(editCard(listTitle, editList, index));
+  };
+  const onClickDelete = (e: any) => {
+    const listTitle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(
+      ".MuiCardHeader-content"
+    ).innerText;
+    if (editListEl.current) {
+      editListEl.current.style.display = "none";
+    }
+    if (editBlack.current) {
+      editBlack.current.style.display = "none";
+    }
+    dispatch(deleteCard(listTitle, index));
   };
 
   return (
@@ -194,7 +207,9 @@ const ListCard: React.FC<Props> = ({ list }) => {
         <button className={classes.editListBt} onClick={onClickSave}>
           Save
         </button>
-        <button className={classes.deleteListBt}>Delete</button>
+        <button className={classes.deleteListBt} onClick={onClickDelete}>
+          Delete
+        </button>
       </form>
     </div>
   );
