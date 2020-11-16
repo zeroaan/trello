@@ -1,11 +1,11 @@
-import { ADD_LIST } from "../actions/types";
+import { ADD_CARD } from "../actions/types";
 
 export interface AddListAction {
-  type: typeof ADD_LIST;
+  type: typeof ADD_CARD;
 }
 
 export const addList = () => {
   return {
-    type: ADD_LIST,
+    type: ADD_CARD,
   };
 };

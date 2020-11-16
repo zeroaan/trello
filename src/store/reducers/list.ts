@@ -1,4 +1,4 @@
-import { ADD_LIST } from "../actions/types";
+import { ADD_CARD } from "../actions/types";
 import { AddListAction } from "../actions/list";
 
 export interface ListState {
@@ -14,11 +14,13 @@ const initialState: ListState = {
 };
 
 type ListReducerActions = AddListAction;
-export default (state = initialState, action: ListReducerActions) => {
+const listReducer = (state = initialState, action: ListReducerActions) => {
   switch (action.type) {
-    case ADD_LIST:
+    case ADD_CARD:
       return state;
     default:
       return state;
   }
 };
+
+export default listReducer;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ListCard from "components/ListCard";
 
 import Button from "@material-ui/core/Button";
@@ -46,10 +46,43 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     width: "230px",
     height: "25px",
+    display: "none",
   },
   addBt: {
     width: "100%",
     textTransform: "none",
+  },
+  addBtText: {
+    display: "none",
+    position: "relative",
+    top: "-8px",
+    left: "-4px",
+  },
+  addCardInput: {
+    boxShadow:
+      "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
+    fontSize: "15px",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    width: "256px",
+    height: "60px",
+    padding: "10px 10px",
+    resize: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+  },
+  addCardBt: {
+    borderRadius: "5px",
+    outline: "none",
+    border: "none",
+    backgroundColor: "rgb(90,172,68)",
+    marginTop: "10px",
+    color: "white",
+    padding: "6px 10px",
+    fontSize: "16px",
+    cursor: "pointer",
   },
 }));
 
@@ -62,21 +95,62 @@ const List: React.FC<Props> = ({ title, list }) => {
   const classes = useStyles();
 
   const [textTitle, setTextTitle] = useState(title);
-  const [textInput, setTextInput] = useState("invisible");
+  const [card, setCard] = useState("");
+  const cardAdd = useRef<HTMLButtonElement>(null);
+  const textInput = useRef<HTMLInputElement>(null);
+  const cardInput = useRef<HTMLInputElement>(null);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setTextTitle(value);
   };
   const onClickName = () => {
-    setTextInput("");
+    if (textInput.current) {
+      textInput.current.style.display = "block";
+    }
   };
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setTextInput("invisible");
+    if (textInput.current) {
+      textInput.current.style.display = "none";
+    }
   };
   const onBlurInput = () => {
-    setTextInput("invisible");
+    if (textInput.current) {
+      textInput.current.style.display = "none";
+    }
+  };
+  const onClickAddBt = () => {
+    if (cardInput.current) {
+      cardInput.current.style.display = "block";
+    }
+    if (cardAdd.current) {
+      cardAdd.current.style.display = "none";
+    }
+  };
+  const onClickAddCard = (e: any) => {
+    const listTitle = e.target.parentElement.parentElement.parentElement.querySelector(
+      ".MuiCardHeader-content"
+    ).innerText;
+    if (cardInput.current) {
+      cardInput.current.style.display = "none";
+    }
+    if (cardAdd.current) {
+      cardAdd.current.style.display = "block";
+    }
+    console.log(listTitle);
+  };
+  const onBlurAddCard = () => {
+    if (cardInput.current) {
+      cardInput.current.style.display = "none";
+    }
+    if (cardAdd.current) {
+      cardAdd.current.style.display = "block";
+    }
+  };
+  const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    setCard(value);
   };
 
   return (
@@ -90,7 +164,7 @@ const List: React.FC<Props> = ({ title, list }) => {
         />
         <form className={classes.listNameForm} onSubmit={onSubmitForm}>
           <input
-            id={textInput}
+            ref={textInput}
             className={classes.listNameInput}
             value={textTitle}
             onChange={onChangeInput}
@@ -105,9 +179,26 @@ const List: React.FC<Props> = ({ title, list }) => {
           ))}
         </CardContent>
         <CardActions>
-          <Button className={classes.addBt} disableRipple>
+          <Button
+            ref={cardAdd}
+            className={classes.addBt}
+            onClick={onClickAddBt}
+            disableRipple
+          >
             + Add a Card
           </Button>
+          <div ref={cardInput} className={classes.addBtText}>
+            <textarea
+              className={classes.addCardInput}
+              placeholder="Input card ..."
+              onChange={onChangeCard}
+              onBlur={onBlurAddCard}
+              value={card}
+            />
+            <button className={classes.addCardBt} onClick={onClickAddCard}>
+              Add Card
+            </button>
+          </div>
         </CardActions>
       </Card>
     </>
