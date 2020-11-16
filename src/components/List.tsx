@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import ListCard from "components/ListCard";
 
 import { useDispatch } from "react-redux";
-import { addCard } from "../store/actions/list";
+import { changeTitle, addCard } from "../store/actions/list";
 
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
     width: "256px",
     height: "60px",
     padding: "10px 10px",
+    marginTop: "12px",
     resize: "none",
     "&::-webkit-scrollbar": {
       display: "none",
@@ -128,6 +129,7 @@ const List: React.FC<Props> = ({ title, list }) => {
     if (textInput.current) {
       textInput.current.style.display = "none";
     }
+    dispatch(changeTitle(title, textTitle));
   };
   const onBlurInput = () => {
     if (textInput.current) {
@@ -147,12 +149,6 @@ const List: React.FC<Props> = ({ title, list }) => {
       const listTitle = e.target.parentElement.parentElement.parentElement.querySelector(
         ".MuiCardHeader-content"
       ).innerText;
-      if (cardInput.current) {
-        cardInput.current.style.display = "none";
-      }
-      if (cardAdd.current) {
-        cardAdd.current.style.display = "block";
-      }
       dispatch(addCard(listTitle, card));
       setCard("");
     }
@@ -197,7 +193,7 @@ const List: React.FC<Props> = ({ title, list }) => {
             <ListCard key={i} list={v} />
           ))}
         </CardContent>
-        <CardActions style={{ marginTop: "12px" }}>
+        <CardActions>
           <Button
             ref={cardAdd}
             className={classes.addBt}
