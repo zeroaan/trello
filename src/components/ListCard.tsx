@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useRef } from "react";
+import React from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 import { editCard, deleteCard } from "../store/actions/list";
@@ -112,9 +112,13 @@ const ListCard: React.FC<Props> = ({ list, index }) => {
   const classes = useStyles();
 
   const [editList, setEditList] = useState(list);
-  const editListEl = useRef<HTMLFormElement>(null);
+  const editListEl = useRef<HTMLDivElement>(null);
   const editBlack = useRef<HTMLDivElement>(null);
   const editEl = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    setEditList(list);
+  }, [list]);
 
   const onMouseOver = () => {
     if (editEl.current) {
@@ -193,24 +197,22 @@ const ListCard: React.FC<Props> = ({ list, index }) => {
           backgroundColor: "rgba(0, 0, 0, 0.45)",
         }}
       ></div>
-      <form
-        ref={editListEl}
-        className={classes.editListform}
-        onSubmit={onSubmitForm}
-      >
-        <textarea
-          className={classes.editListInput}
-          placeholder="Input card ..."
-          value={editList}
-          onChange={onChageEditList}
-        />
+      <div ref={editListEl} className={classes.editListform}>
+        <form onSubmit={onSubmitForm}>
+          <textarea
+            className={classes.editListInput}
+            placeholder="Input card ..."
+            value={editList}
+            onChange={onChageEditList}
+          />
+        </form>
         <button className={classes.editListBt} onClick={onClickSave}>
           Save
         </button>
         <button className={classes.deleteListBt} onClick={onClickDelete}>
           Delete
         </button>
-      </form>
+      </div>
     </div>
   );
 };
