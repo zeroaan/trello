@@ -102,9 +102,10 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   title: string;
   list: string[];
+  index: number;
 }
 
-const List: React.FC<Props> = ({ title, list }) => {
+const List: React.FC<Props> = ({ title, list, index }) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -129,14 +130,14 @@ const List: React.FC<Props> = ({ title, list }) => {
     if (textInput.current) {
       textInput.current.style.display = "none";
     }
-    dispatch(changeTitle(title, textTitle));
+    dispatch(changeTitle(textTitle, index));
   };
   const onBlurInput = () => {
     if (textTitle !== "") {
       if (textInput.current) {
         textInput.current.style.display = "none";
       }
-      dispatch(changeTitle(title, textTitle));
+      dispatch(changeTitle(textTitle, index));
     }
   };
   const onClickAddBt = () => {
@@ -147,12 +148,9 @@ const List: React.FC<Props> = ({ title, list }) => {
       cardAdd.current.style.display = "none";
     }
   };
-  const onClickAddCard = (e: any) => {
+  const onClickAddCard = () => {
     if (card !== "") {
-      const listTitle = e.target.parentElement.parentElement.parentElement.querySelector(
-        ".MuiCardHeader-content"
-      ).innerText;
-      dispatch(addCard(listTitle, card));
+      dispatch(addCard(card, index));
       setCard("");
     }
   };
@@ -194,7 +192,7 @@ const List: React.FC<Props> = ({ title, list }) => {
           style={{ padding: "0 12px", overflow: "auto", maxHeight: "375px" }}
         >
           {list.map((v, i) => (
-            <ListCard key={i} list={v} index={i} />
+            <ListCard key={i} list={v} index={i} listIndex={index} />
           ))}
         </CardContent>
         <CardActions>

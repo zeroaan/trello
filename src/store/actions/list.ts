@@ -1,5 +1,6 @@
 import {
   CHANGE_TITLE,
+  ADD_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
@@ -7,58 +8,70 @@ import {
 
 export interface ChangeTitleAction {
   type: typeof CHANGE_TITLE;
-  title: string;
   newTitle: string;
+  index: number;
+}
+
+export interface AddListAction {
+  type: typeof ADD_LIST;
+  title: string;
 }
 
 export interface AddCardAction {
   type: typeof ADD_CARD;
-  title: string;
   card: string;
+  index: number;
 }
 
 export interface EditCardAction {
   type: typeof EDIT_CARD;
-  title: string;
   newCard: string;
   index: number;
+  listIndex: number;
 }
 
 export interface DeleteCardAction {
   type: typeof DELETE_CARD;
-  title: string;
   index: number;
+  listIndex: number;
 }
 
-export const changeTitle = (title: string, newTitle: string) => {
+export const changeTitle = (newTitle: string, index: number) => {
   return {
     type: CHANGE_TITLE,
-    title,
     newTitle,
+    index,
   };
 };
 
-export const addCard = (title: string, card: string) => {
+export const addList = (title: string) => {
+  return {
+    type: ADD_LIST,
+    title,
+  };
+};
+
+export const addCard = (card: string, index: number) => {
   return {
     type: ADD_CARD,
-    title,
     card,
+    index,
   };
 };
 
-export const editCard = (title: string, newCard: string, index: number) => {
+export const editCard = (newCard: string, index: number, listIndex: number) => {
   return {
     type: EDIT_CARD,
-    title,
     newCard,
     index,
+    listIndex,
   };
 };
 
-export const deleteCard = (title: string, index: number) => {
+export const deleteCard = (index: number, listIndex: number) => {
   return {
     type: DELETE_CARD,
-    title,
     index,
+    listIndex,
   };
 };

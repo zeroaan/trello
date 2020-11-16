@@ -104,9 +104,10 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   list: string;
   index: number;
+  listIndex: number;
 }
 
-const ListCard: React.FC<Props> = ({ list, index }) => {
+const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -145,29 +146,23 @@ const ListCard: React.FC<Props> = ({ list, index }) => {
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
-  const onClickSave = (e: any) => {
-    const listTitle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(
-      ".MuiCardHeader-content"
-    ).innerText;
+  const onClickSave = () => {
     if (editListEl.current) {
       editListEl.current.style.display = "none";
     }
     if (editBlack.current) {
       editBlack.current.style.display = "none";
     }
-    dispatch(editCard(listTitle, editList, index));
+    dispatch(editCard(editList, index, listIndex));
   };
-  const onClickDelete = (e: any) => {
-    const listTitle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(
-      ".MuiCardHeader-content"
-    ).innerText;
+  const onClickDelete = () => {
     if (editListEl.current) {
       editListEl.current.style.display = "none";
     }
     if (editBlack.current) {
       editBlack.current.style.display = "none";
     }
-    dispatch(deleteCard(listTitle, index));
+    dispatch(deleteCard(index, listIndex));
   };
 
   return (

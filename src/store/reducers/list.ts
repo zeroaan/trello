@@ -1,11 +1,13 @@
 import {
   CHANGE_TITLE,
+  ADD_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
 } from "../actions/types";
 import {
   ChangeTitleAction,
+  AddListAction,
   AddCardAction,
   EditCardAction,
   DeleteCardAction,
@@ -28,6 +30,7 @@ const initialState: ListState = {
 
 type ListReducerActions =
   | ChangeTitleAction
+  | AddListAction
   | AddCardAction
   | EditCardAction
   | DeleteCardAction;
@@ -35,48 +38,29 @@ const listReducer = (state = initialState, action: ListReducerActions) => {
   switch (action.type) {
     case CHANGE_TITLE: {
       const newLists = [...state.lists];
-      let i = 0;
-      while (i < state.lists.length) {
-        if (state.lists[i].title === action.title) {
-          newLists[i].title = action.newTitle;
-        }
-        i = i + 1;
-      }
+      newLists[action.index].title = action.newTitle;
+      return { ...state, lists: [...newLists] };
+    }
+    case ADD_LIST: {
+      const newLists = [...state.lists, { title: action.title, list: [] }];
       return { ...state, lists: [...newLists] };
     }
     case ADD_CARD: {
       const newLists = [...state.lists];
-      let i = 0;
-      while (i < state.lists.length) {
-        if (state.lists[i].title === action.title) {
-          newLists[i].title = state.lists[i].title;
-          newLists[i].list = [...state.lists[i].list, action.card];
-        }
-        i = i + 1;
-      }
+      newLists[action.index].list = [
+        ...newLists[action.index].list,
+        action.card,
+      ];
       return { ...state, lists: [...newLists] };
     }
     case EDIT_CARD: {
       const newLists = [...state.lists];
-      let i = 0;
-      while (i < state.lists.length) {
-        if (state.lists[i].title === action.title) {
-          newLists[i].list[action.index] = action.newCard;
-          break;
-        }
-        i = i + 1;
-      }
+      newLists[action.listIndex].list[action.index] = action.newCard;
       return { ...state, lists: [...newLists] };
     }
     case DELETE_CARD: {
       const newLists = [...state.lists];
-      let i = 0;
-      while (i < state.lists.length) {
-        if (state.lists[i].title === action.title) {
-          newLists[i].list.splice(action.index, 1);
-        }
-        i = i + 1;
-      }
+      newLists[action.listIndex].list.splice(action.index, 1);
       return { ...state, lists: [...newLists] };
     }
     default:
