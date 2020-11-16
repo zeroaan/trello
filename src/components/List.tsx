@@ -2,6 +2,9 @@ import React from "react";
 import { useState, useRef } from "react";
 import ListCard from "components/ListCard";
 
+import { useDispatch } from "react-redux";
+import { addCard } from "../store/actions/list";
+
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -92,6 +95,8 @@ interface Props {
 }
 
 const List: React.FC<Props> = ({ title, list }) => {
+  const dispatch = useDispatch();
+
   const classes = useStyles();
 
   const [textTitle, setTextTitle] = useState(title);
@@ -138,15 +143,8 @@ const List: React.FC<Props> = ({ title, list }) => {
     if (cardAdd.current) {
       cardAdd.current.style.display = "block";
     }
-    console.log(listTitle);
-  };
-  const onBlurAddCard = () => {
-    if (cardInput.current) {
-      cardInput.current.style.display = "none";
-    }
-    if (cardAdd.current) {
-      cardAdd.current.style.display = "block";
-    }
+    dispatch(addCard(listTitle, card));
+    setCard("");
   };
   const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
@@ -192,7 +190,6 @@ const List: React.FC<Props> = ({ title, list }) => {
               className={classes.addCardInput}
               placeholder="Input card ..."
               onChange={onChangeCard}
-              onBlur={onBlurAddCard}
               value={card}
             />
             <button className={classes.addCardBt} onClick={onClickAddCard}>

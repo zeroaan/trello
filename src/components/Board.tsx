@@ -87,7 +87,9 @@ const Board = () => {
 
   const [boardName, setBoardName] = useState("name");
   const [textInput, setTextInput] = useState("invisible");
-  const { lists } = useSelector<RootState, ListState>((store) => store.list);
+  const { lists } = useSelector<RootState, ListState>(
+    (state: RootState) => state.list
+  );
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
@@ -160,9 +162,14 @@ const Board = () => {
           </form>
         </div>
         <div style={{ display: "flex" }}>
-          {lists.map((v: { title: string; list: string[] }, i: number) => (
-            <List key={i} title={v.title} list={v.list} />
-          ))}
+          {lists === undefined ? null : (
+            <>
+              {lists.map((v: { title: string; list: string[] }, i: number) => (
+                <List key={i} title={v.title} list={v.list} />
+              ))}
+            </>
+          )}
+
           <Button className={classes.addBt} disableRipple>
             <div style={{ position: "absolute", left: "20px" }}>
               + Add a List

@@ -61,7 +61,7 @@ const ListCard: React.FC<Props> = ({ list }) => {
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
       >
-        <p>{list}</p>
+        <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>{list}</p>
         <CreateIcon ref={editEl} className={classes.editIcon} />
       </Paper>
     </>
