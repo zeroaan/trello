@@ -10,6 +10,7 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -87,6 +88,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "16px",
     cursor: "pointer",
   },
+  closeIcon: {
+    position: "relative",
+    top: "7px",
+    left: "8px",
+    cursor: "pointer",
+    color: "rgb(108,120,141)",
+    fontSize: "25px",
+  },
 }));
 
 interface Props {
@@ -134,21 +143,31 @@ const List: React.FC<Props> = ({ title, list }) => {
     }
   };
   const onClickAddCard = (e: any) => {
-    const listTitle = e.target.parentElement.parentElement.parentElement.querySelector(
-      ".MuiCardHeader-content"
-    ).innerText;
+    if (card !== "") {
+      const listTitle = e.target.parentElement.parentElement.parentElement.querySelector(
+        ".MuiCardHeader-content"
+      ).innerText;
+      if (cardInput.current) {
+        cardInput.current.style.display = "none";
+      }
+      if (cardAdd.current) {
+        cardAdd.current.style.display = "block";
+      }
+      dispatch(addCard(listTitle, card));
+      setCard("");
+    }
+  };
+  const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    setCard(value);
+  };
+  const onClickClose = () => {
     if (cardInput.current) {
       cardInput.current.style.display = "none";
     }
     if (cardAdd.current) {
       cardAdd.current.style.display = "block";
     }
-    dispatch(addCard(listTitle, card));
-    setCard("");
-  };
-  const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setCard(value);
   };
 
   return (
@@ -171,12 +190,14 @@ const List: React.FC<Props> = ({ title, list }) => {
           />
         </form>
         <button className={classes.menuBt}>⋯</button>
-        <CardContent style={{ padding: "0 12px" }}>
+        <CardContent
+          style={{ padding: "0 12px", overflow: "auto", maxHeight: "375px" }}
+        >
           {list.map((v, i) => (
             <ListCard key={i} list={v} />
           ))}
         </CardContent>
-        <CardActions>
+        <CardActions style={{ marginTop: "12px" }}>
           <Button
             ref={cardAdd}
             className={classes.addBt}
@@ -195,6 +216,7 @@ const List: React.FC<Props> = ({ title, list }) => {
             <button className={classes.addCardBt} onClick={onClickAddCard}>
               Add Card
             </button>
+            <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
           </div>
         </CardActions>
       </Card>
