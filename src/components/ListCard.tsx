@@ -6,6 +6,7 @@ import { editCard, deleteCard } from "../store/actions/list";
 
 import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   editListBt: {
     position: "absolute",
     top: "80px",
-    left: "200px",
+    left: "0px",
     outline: "none",
     border: "none",
     zIndex: 1200,
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   deleteListBt: {
     position: "absolute",
     top: "80px",
-    left: "120px",
+    left: "85px",
     outline: "none",
     border: "none",
     zIndex: 1200,
@@ -98,6 +99,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "8px 15px",
     fontSize: "16px",
     cursor: "pointer",
+  },
+  closeIcon: {
+    position: "absolute",
+    top: "93px",
+    left: "245px",
+    cursor: "pointer",
+    color: "black",
+    fontSize: "25px",
+    zIndex: 1200,
   },
 }));
 
@@ -116,6 +126,8 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
   const editListEl = useRef<HTMLDivElement>(null);
   const editBlack = useRef<HTMLDivElement>(null);
   const editEl = useRef<SVGSVGElement>(null);
+  const paperEl = useRef<HTMLDivElement>(null);
+  const textareaEl = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setEditList(list);
@@ -138,8 +150,11 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
     if (editBlack.current) {
       editBlack.current.style.display = "block";
     }
+    if (paperEl.current && textareaEl.current) {
+      textareaEl.current.style.width = `${paperEl.current.scrollWidth - 24}px`;
+    }
   };
-  const onChageEditList = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChangeEditList = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
     setEditList(value);
   };
@@ -147,13 +162,15 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
     e.preventDefault();
   };
   const onClickSave = () => {
-    if (editListEl.current) {
-      editListEl.current.style.display = "none";
+    if (editList !== "") {
+      if (editListEl.current) {
+        editListEl.current.style.display = "none";
+      }
+      if (editBlack.current) {
+        editBlack.current.style.display = "none";
+      }
+      dispatch(editCard(editList, index, listIndex));
     }
-    if (editBlack.current) {
-      editBlack.current.style.display = "none";
-    }
-    dispatch(editCard(editList, index, listIndex));
   };
   const onClickDelete = () => {
     if (editListEl.current) {
@@ -164,10 +181,29 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
     }
     dispatch(deleteCard(index, listIndex));
   };
+  const onClickClose = () => {
+    if (editListEl.current) {
+      editListEl.current.style.display = "none";
+    }
+    if (editBlack.current) {
+      editBlack.current.style.display = "none";
+    }
+    setEditList(list);
+  };
+  const onClickEditBlack = () => {
+    if (editListEl.current) {
+      editListEl.current.style.display = "none";
+    }
+    if (editBlack.current) {
+      editBlack.current.style.display = "none";
+    }
+    setEditList(list);
+  };
 
   return (
     <div style={{ position: "relative" }}>
       <Paper
+        ref={paperEl}
         className={classes.list}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
@@ -189,18 +225,22 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
           width: "100vw",
           height: "100vh",
           zIndex: 1100,
-          backgroundColor: "rgba(0, 0, 0, 0.45)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
+        onClick={onClickEditBlack}
       ></div>
       <div ref={editListEl} className={classes.editListform}>
+        <div style={{ height: "82px" }}></div>
         <form onSubmit={onSubmitForm}>
           <textarea
+            ref={textareaEl}
             className={classes.editListInput}
             placeholder="Input card ..."
             value={editList}
-            onChange={onChageEditList}
+            onChange={onChangeEditList}
           />
         </form>
+        <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
         <button className={classes.editListBt} onClick={onClickSave}>
           Save
         </button>

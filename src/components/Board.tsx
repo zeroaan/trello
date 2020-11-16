@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   addBt: {
-    margin: "0 0 0 16px",
+    margin: "0 32px 0 16px",
     flexShrink: 0,
     width: "300px",
     height: "40px",

@@ -97,6 +97,22 @@ const useStyles = makeStyles((theme) => ({
     color: "rgb(108,120,141)",
     fontSize: "25px",
   },
+  cardContent: {
+    padding: "0 12px",
+    overflow: "auto",
+    maxHeight: "375px",
+    "&::-webkit-scrollbar": {
+      width: "8px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgb(191,196,206)",
+      borderRadius: "10px",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "rgb(218,219,226)",
+      borderRadius: "10px",
+    },
+  },
 }));
 
 interface Props {
@@ -192,9 +208,7 @@ const List: React.FC<Props> = ({ title, list, index }) => {
           />
         </form>
         <button className={classes.menuBt}>⋯</button>
-        <CardContent
-          style={{ padding: "0 12px", overflow: "auto", maxHeight: "375px" }}
-        >
+        <CardContent className={classes.cardContent}>
           {list.map((v, i) => (
             <ListCard key={i} list={v} index={i} listIndex={index} />
           ))}
