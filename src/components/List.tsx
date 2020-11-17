@@ -5,7 +5,9 @@ import ListCard from "components/ListCard";
 import { useDispatch } from "react-redux";
 import { changeTitle, addCard } from "../store/actions/list";
 
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
@@ -22,9 +24,13 @@ const useStyles = makeStyles((theme) => ({
     width: "300px",
     height: "100%",
     margin: "0 0 0 16px",
+    overflow: "visible",
   },
   listName: {
+    margin: "13px 10px",
     fontSize: "18px",
+    width: "210px",
+    height: "1px",
   },
   listNameForm: {
     position: "absolute",
@@ -44,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(235,236,240)",
   },
   listNameInput: {
+    paddingTop: "2px",
+    paddingLeft: "12px",
     fontSize: "18px",
     outline: "none",
     border: "2px solid rgb(0,121,191)",
@@ -113,6 +121,40 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "10px",
     },
   },
+  listAc: {
+    zIndex: 100,
+    position: "absolute",
+    top: "13px",
+    right: "-160px",
+    width: "200px",
+    height: "165px",
+    border: "1px solid rgb(218,219,226)",
+    display: "none",
+  },
+  listAcTitle: {
+    fontFamily: `"Jua", sans-serif`,
+    position: "relative",
+    top: "8px",
+    left: "55px",
+  },
+  listAcClose: {
+    position: "absolute",
+    top: "11px",
+    right: "9px",
+    fontSize: "17px",
+    cursor: "pointer",
+  },
+  listAcHr: {
+    position: "relative",
+    top: "10px",
+    width: "170px",
+    margin: "auto",
+    border: "1px solid rgb(218,219,226)",
+    backgroundColor: "rgb(218,219,226)",
+  },
+  listAcBt: {
+    width: "179px",
+  },
 }));
 
 interface Props {
@@ -131,6 +173,7 @@ const List: React.FC<Props> = ({ title, list, index }) => {
   const cardAdd = useRef<HTMLButtonElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
   const cardInput = useRef<HTMLInputElement>(null);
+  const listAcEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTextTitle(title);
@@ -187,6 +230,21 @@ const List: React.FC<Props> = ({ title, list, index }) => {
     }
   };
 
+  const onClickListAc = () => {
+    if (listAcEl.current) {
+      listAcEl.current.style.display = "block";
+    }
+  };
+  const onClickListAcClose = () => {
+    if (listAcEl.current) {
+      listAcEl.current.style.display = "none";
+    }
+  };
+  const onClickListAcAddCard = () => {
+    onClickListAcClose();
+    onClickAddBt();
+  };
+
   return (
     <>
       <Card className={classes.list}>
@@ -207,7 +265,45 @@ const List: React.FC<Props> = ({ title, list, index }) => {
             maxLength={15}
           />
         </form>
-        <button className={classes.menuBt}>⋯</button>
+        <button className={classes.menuBt} onClick={onClickListAc}>
+          ⋯
+        </button>
+        <Paper
+          ref={listAcEl}
+          className={classes.listAc}
+          onMouseLeave={onClickListAcClose}
+        >
+          <Typography className={classes.listAcTitle} variant="subtitle1">
+            List Actions
+          </Typography>
+          <CloseIcon
+            className={classes.listAcClose}
+            onClick={onClickListAcClose}
+          />
+          <hr className={classes.listAcHr} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginTop: "15px",
+            }}
+          >
+            <Button
+              className={classes.listAcBt}
+              onClick={onClickListAcAddCard}
+              disableRipple
+            >
+              Add Card
+            </Button>
+            <Button className={classes.listAcBt} disableRipple>
+              Copy List
+            </Button>
+            <Button className={classes.listAcBt} disableRipple>
+              Delete This List
+            </Button>
+          </div>
+        </Paper>
         <CardContent className={classes.cardContent}>
           {list.map((v, i) => (
             <ListCard key={i} list={v} index={i} listIndex={index} />
