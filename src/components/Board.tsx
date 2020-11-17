@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import { ListState } from "store/reducers/trello";
+import { BoardState } from "store/reducers/trello";
 import List from "components/List";
 import "app.css";
 
@@ -145,9 +145,10 @@ const Board = () => {
   const [textInput, setTextInput] = useState("invisible");
   const [newList, setNewList] = useState("");
 
-  const { lists } = useSelector<RootState, ListState>(
+  const { boards } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
+  const lists = boards[0].lists;
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
