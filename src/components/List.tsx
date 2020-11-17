@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     width: "210px",
     height: "1px",
+    cursor: "pointer",
   },
   listNameForm: {
     position: "absolute",
