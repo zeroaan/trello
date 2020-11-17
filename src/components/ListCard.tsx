@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState, useRef } from "react";
 
 import { useDispatch } from "react-redux";
-import { editCard, deleteCard } from "../store/actions/list";
+import { editCard, deleteCard } from "../store/actions/trello";
 
 import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";

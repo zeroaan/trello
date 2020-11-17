@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import list from "./list";
+import trello from "./trello";
 
 const rootReducer = combineReducers({
-  list,
+  trello,
 });
 
 export default rootReducer;

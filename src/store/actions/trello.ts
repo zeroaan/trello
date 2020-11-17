@@ -6,7 +6,7 @@ import {
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
-} from "../actions/types";
+} from "./types";
 
 export interface ChangeTitleAction {
   type: typeof CHANGE_TITLE;

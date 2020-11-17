@@ -2,12 +2,12 @@ import React from "react";
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import { ListState } from "store/reducers/list";
+import { ListState } from "store/reducers/trello";
 import List from "components/List";
 import "app.css";
 
 import { useDispatch } from "react-redux";
-import { addList } from "../store/actions/list";
+import { addList } from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -146,7 +146,7 @@ const Board = () => {
   const [newList, setNewList] = useState("");
 
   const { lists } = useSelector<RootState, ListState>(
-    (state: RootState) => state.list
+    (state: RootState) => state.trello
   );
 
   const bnEl = useRef<HTMLInputElement>(null);

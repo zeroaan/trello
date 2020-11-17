@@ -15,7 +15,7 @@ import {
   AddCardAction,
   EditCardAction,
   DeleteCardAction,
-} from "../actions/list";
+} from "../actions/trello";
 
 export interface ListState {
   lists: { title: string; list: string[] }[];
@@ -23,12 +23,12 @@ export interface ListState {
 
 const initialState: ListState = {
   lists: [
-    { title: "To do", list: ["doing", "test", "post", "hello"] },
+    { title: "To do", list: ["doing", "test a game", "post", "hello"] },
     {
       title: "Doing",
-      list: ["wowwowo", "doing"],
+      list: ["go to school", "watch"],
     },
-    { title: "Complete", list: ["pratice", "what", "comp"] },
+    { title: "Complete", list: ["pratice", "finish", "complete"] },
   ],
 };
 
