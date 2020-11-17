@@ -1,6 +1,8 @@
 import {
   CHANGE_TITLE,
   ADD_LIST,
+  COPY_LIST,
+  DELETE_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
@@ -15,6 +17,17 @@ export interface ChangeTitleAction {
 export interface AddListAction {
   type: typeof ADD_LIST;
   title: string;
+}
+
+export interface CopyListAction {
+  type: typeof COPY_LIST;
+  title: string;
+  index: number;
+}
+
+export interface DeleteListAction {
+  type: typeof DELETE_LIST;
+  index: number;
 }
 
 export interface AddCardAction {
@@ -48,6 +61,21 @@ export const addList = (title: string) => {
   return {
     type: ADD_LIST,
     title,
+  };
+};
+
+export const copyList = (title: string, index: number) => {
+  return {
+    type: COPY_LIST,
+    title,
+    index,
+  };
+};
+
+export const deleteList = (index: number) => {
+  return {
+    type: DELETE_LIST,
+    index,
   };
 };
 

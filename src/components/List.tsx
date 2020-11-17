@@ -3,7 +3,12 @@ import { useEffect, useState, useRef } from "react";
 import ListCard from "components/ListCard";
 
 import { useDispatch } from "react-redux";
-import { changeTitle, addCard } from "../store/actions/list";
+import {
+  changeTitle,
+  addCard,
+  copyList,
+  deleteList,
+} from "../store/actions/list";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -135,14 +140,22 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: `"Jua", sans-serif`,
     position: "relative",
     top: "8px",
-    left: "55px",
+    textAlign: "center",
   },
   listAcClose: {
     position: "absolute",
-    top: "11px",
+    top: "12px",
     right: "9px",
     fontSize: "17px",
     cursor: "pointer",
+  },
+  listAcBack: {
+    position: "absolute",
+    top: "12px",
+    left: "9px",
+    fontSize: "15px",
+    cursor: "pointer",
+    zIndex: 1,
   },
   listAcHr: {
     position: "relative",
@@ -152,8 +165,52 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid rgb(218,219,226)",
     backgroundColor: "rgb(218,219,226)",
   },
+  listAcdivBt: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: "15px",
+  },
   listAcBt: {
     width: "179px",
+  },
+  listAcdiv: {
+    margin: "20px 15px",
+  },
+  listAcaddListInput: {
+    fontSize: "15px",
+    outline: "none",
+    border: "2px solid rgb(0,121,191)",
+    borderRadius: "5px",
+    width: "145px",
+    height: "12px",
+    padding: "10px 10px",
+    margin: "8px 0px",
+    resize: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+  },
+  listAcaddListBt: {
+    borderRadius: "5px",
+    outline: "none",
+    border: "none",
+    backgroundColor: "rgb(90,172,68)",
+    color: "white",
+    padding: "6px 8px",
+    fontSize: "15px",
+    cursor: "pointer",
+  },
+  listAcDeleteListBt: {
+    margin: "0 47px",
+    borderRadius: "5px",
+    outline: "none",
+    border: "none",
+    backgroundColor: "rgb(250,60,84)",
+    color: "white",
+    padding: "6px 16px",
+    fontSize: "15px",
+    cursor: "pointer",
   },
 }));
 
@@ -170,10 +227,13 @@ const List: React.FC<Props> = ({ title, list, index }) => {
 
   const [textTitle, setTextTitle] = useState(title);
   const [card, setCard] = useState("");
+  const [newList, setNewList] = useState("");
   const cardAdd = useRef<HTMLButtonElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
   const cardInput = useRef<HTMLInputElement>(null);
   const listAcEl = useRef<HTMLDivElement>(null);
+  const listAcCpEl = useRef<HTMLDivElement>(null);
+  const listAcDlEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTextTitle(title);
@@ -236,13 +296,43 @@ const List: React.FC<Props> = ({ title, list, index }) => {
     }
   };
   const onClickListAcClose = () => {
-    if (listAcEl.current) {
+    if (listAcEl.current && listAcCpEl.current && listAcDlEl.current) {
       listAcEl.current.style.display = "none";
+      listAcCpEl.current.style.display = "none";
+      listAcDlEl.current.style.display = "none";
     }
+    setNewList("");
   };
   const onClickListAcAddCard = () => {
     onClickListAcClose();
     onClickAddBt();
+  };
+  const onClickListAcCopy = () => {
+    if (listAcEl.current && listAcCpEl.current) {
+      listAcEl.current.style.display = "none";
+      listAcCpEl.current.style.display = "block";
+    }
+  };
+  const onClickListAcDelete = () => {
+    if (listAcEl.current && listAcDlEl.current) {
+      listAcEl.current.style.display = "none";
+      listAcDlEl.current.style.display = "block";
+    }
+  };
+  const onChangeList = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNewList(value);
+  };
+  const onClickAddList = () => {
+    if (newList !== "") {
+      onClickListAcClose();
+      dispatch(copyList(newList, index));
+      setNewList("");
+    }
+  };
+  const onClickDeleteList = () => {
+    onClickListAcClose();
+    dispatch(deleteList(index));
   };
 
   return (
@@ -268,42 +358,96 @@ const List: React.FC<Props> = ({ title, list, index }) => {
         <button className={classes.menuBt} onClick={onClickListAc}>
           ⋯
         </button>
-        <Paper
-          ref={listAcEl}
-          className={classes.listAc}
-          onMouseLeave={onClickListAcClose}
-        >
-          <Typography className={classes.listAcTitle} variant="subtitle1">
-            List Actions
-          </Typography>
-          <CloseIcon
-            className={classes.listAcClose}
-            onClick={onClickListAcClose}
-          />
-          <hr className={classes.listAcHr} />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              marginTop: "15px",
-            }}
+        <div onMouseLeave={onClickListAcClose}>
+          <Paper ref={listAcEl} className={classes.listAc}>
+            <Typography className={classes.listAcTitle} variant="subtitle1">
+              List Actions
+            </Typography>
+            <CloseIcon
+              className={classes.listAcClose}
+              onClick={onClickListAcClose}
+            />
+            <hr className={classes.listAcHr} />
+            <div className={classes.listAcdivBt}>
+              <Button
+                className={classes.listAcBt}
+                onClick={onClickListAcAddCard}
+                disableRipple
+              >
+                Add Card
+              </Button>
+              <Button
+                className={classes.listAcBt}
+                onClick={onClickListAcCopy}
+                disableRipple
+              >
+                Copy List
+              </Button>
+              <Button
+                className={classes.listAcBt}
+                onClick={onClickListAcDelete}
+                disableRipple
+              >
+                Delete This List
+              </Button>
+            </div>
+          </Paper>
+          <Paper
+            ref={listAcCpEl}
+            className={classes.listAc}
+            onMouseLeave={onClickListAcClose}
           >
-            <Button
-              className={classes.listAcBt}
-              onClick={onClickListAcAddCard}
-              disableRipple
-            >
-              Add Card
-            </Button>
-            <Button className={classes.listAcBt} disableRipple>
+            <Typography className={classes.listAcTitle} variant="subtitle1">
               Copy List
-            </Button>
-            <Button className={classes.listAcBt} disableRipple>
-              Delete This List
-            </Button>
-          </div>
-        </Paper>
+            </Typography>
+            <CloseIcon
+              className={classes.listAcClose}
+              onClick={onClickListAcClose}
+            />
+            <hr className={classes.listAcHr} />
+            <div className={classes.listAcdiv}>
+              <p>Name</p>
+              <input
+                className={classes.listAcaddListInput}
+                placeholder="Input List title ..."
+                onChange={onChangeList}
+                value={newList}
+                maxLength={15}
+              />
+              <button
+                className={classes.listAcaddListBt}
+                onClick={onClickAddList}
+              >
+                Create
+              </button>
+            </div>
+          </Paper>
+          <Paper
+            ref={listAcDlEl}
+            className={classes.listAc}
+            onMouseLeave={onClickListAcClose}
+          >
+            <Typography className={classes.listAcTitle} variant="subtitle1">
+              Delete List
+            </Typography>
+            <CloseIcon
+              className={classes.listAcClose}
+              onClick={onClickListAcClose}
+            />
+            <hr className={classes.listAcHr} />
+            <div className={classes.listAcdiv}>
+              <p style={{ margin: "35px 0 20px 0" }}>
+                삭제 후 되돌릴 수 없습니다.
+              </p>
+              <button
+                className={classes.listAcDeleteListBt}
+                onClick={onClickDeleteList}
+              >
+                Delete
+              </button>
+            </div>
+          </Paper>
+        </div>
         <CardContent className={classes.cardContent}>
           {list.map((v, i) => (
             <ListCard key={i} list={v} index={i} listIndex={index} />

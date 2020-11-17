@@ -1,6 +1,8 @@
 import {
   CHANGE_TITLE,
   ADD_LIST,
+  COPY_LIST,
+  DELETE_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
@@ -8,6 +10,8 @@ import {
 import {
   ChangeTitleAction,
   AddListAction,
+  CopyListAction,
+  DeleteListAction,
   AddCardAction,
   EditCardAction,
   DeleteCardAction,
@@ -31,6 +35,8 @@ const initialState: ListState = {
 type ListReducerActions =
   | ChangeTitleAction
   | AddListAction
+  | CopyListAction
+  | DeleteListAction
   | AddCardAction
   | EditCardAction
   | DeleteCardAction;
@@ -43,6 +49,19 @@ const listReducer = (state = initialState, action: ListReducerActions) => {
     }
     case ADD_LIST: {
       const newLists = [...state.lists, { title: action.title, list: [] }];
+      return { ...state, lists: [...newLists] };
+    }
+    case COPY_LIST: {
+      const newLists = [...state.lists];
+      newLists.splice(action.index + 1, 0, {
+        title: action.title,
+        list: [...newLists[action.index].list],
+      });
+      return { ...state, lists: [...newLists] };
+    }
+    case DELETE_LIST: {
+      const newLists = [...state.lists];
+      newLists.splice(action.index, 1);
       return { ...state, lists: [...newLists] };
     }
     case ADD_CARD: {
