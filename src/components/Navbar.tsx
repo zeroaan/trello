@@ -1,8 +1,11 @@
 import React from "react";
 import { useState, useRef } from "react";
+import { useHistory } from "react-router";
+import { RootState } from "store/reducers";
+import { BoardState } from "store/reducers/trello";
 import { Link } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addBoard } from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
@@ -70,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     right: "20px",
   },
+  homeLink: {
+    textDecoration: "none",
+    color: "white",
+  },
   newBoard: {
     display: "none",
     position: "fixed",
@@ -135,8 +142,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
+
   const classes = useStyles();
+
+  const { newBoardId } = useSelector<RootState, BoardState>(
+    (state: RootState) => state.trello
+  );
 
   const [newBoard, setNewBoard] = useState("");
   const newBoardEl = useRef<HTMLDivElement>(null);
@@ -152,16 +165,16 @@ const Navbar = () => {
   };
   const onClickAddBoard = () => {
     if (newBoard !== "") {
-      if (newBoardEl.current) {
-        newBoardEl.current.style.display = "none";
-      }
+      onClickClose();
       dispatch(addBoard(newBoard));
+      history.push(`/board/${newBoardId + 1}`);
     }
   };
   const onClickClose = () => {
     if (newBoardEl.current) {
       newBoardEl.current.style.display = "none";
     }
+    setNewBoard("");
   };
 
   return (
@@ -169,12 +182,12 @@ const Navbar = () => {
       <AppBar className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.div}>
-            <Link to="/">
+            <Link to="/" className={classes.homeLink}>
               <IconButton className={classes.homeiconbutton} color="inherit">
                 <HomeIcon />
               </IconButton>
             </Link>
-            <Link to="/">
+            <Link to="/" className={classes.homeLink}>
               <Button className={classes.button} color="inherit">
                 Boards
               </Button>

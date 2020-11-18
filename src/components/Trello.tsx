@@ -26,8 +26,21 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexFlow: "nowrap",
     overflow: "auto",
+    "&::-webkit-scrollbar": {
+      height: "11px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgb(191,196,206)",
+      borderRadius: "10px",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "rgb(218,219,226)",
+      borderRadius: "10px",
+    },
   },
   boardLink: {
+    position: "relative",
+    left: "-7px",
     height: "80px",
     textDecoration: "none",
     color: "black",

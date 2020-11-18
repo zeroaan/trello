@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
 import { useRouteMatch } from "react-router";
@@ -164,6 +164,10 @@ const Board = () => {
   const wtEl = useRef<HTMLInputElement>(null);
   const stEl = useRef<HTMLButtonElement>(null);
   const addListEl = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setBoardName(firstBoardName);
+  }, [firstBoardName]);
 
   const onClickText = () => {
     setTextInput("");
