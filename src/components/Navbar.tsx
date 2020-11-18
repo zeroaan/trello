@@ -208,7 +208,7 @@ const Navbar = () => {
                 <h3 className={classes.addBoardtitle}>New Board</h3>
                 <input
                   className={classes.addBoardInput}
-                  placeholder="Input List title ..."
+                  placeholder="Input Board Name ..."
                   onChange={onChangeBoard}
                   value={newBoard}
                   maxLength={15}
