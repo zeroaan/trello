@@ -8,7 +8,7 @@ import Navbar from "components/Navbar";
 import "app.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeBoardName, addList } from "../store/actions/trello";
+import { changeBoardName, starBoard, addList } from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -149,10 +149,12 @@ const Board = () => {
   );
   let lists: { title: string; list: string[] }[] = [];
   let firstBoardName: string = "";
+  let boardStar: boolean = false;
   boards.forEach((v, i) => {
     if (v.id === boardId) {
       lists = boards[i].lists;
       firstBoardName = boards[i].boardName;
+      boardStar = boards[i].star;
     }
   });
 
@@ -197,13 +199,7 @@ const Board = () => {
     }
   };
   const onClickStar = () => {
-    if (stEl.current) {
-      if (stEl.current.style.color === "white") {
-        stEl.current.style.color = "yellow";
-      } else if (stEl.current.style.color === "yellow") {
-        stEl.current.style.color = "white";
-      }
-    }
+    dispatch(starBoard(boardId));
   };
 
   const onClickAddListBt = () => {
@@ -236,14 +232,25 @@ const Board = () => {
       <Navbar />
       <div className={classes.screen}>
         <div className={classes.boardName}>
-          <button
-            ref={stEl}
-            style={{ color: "white" }}
-            className={classes.starBt}
-            onClick={onClickStar}
-          >
-            ☆
-          </button>
+          {boardStar ? (
+            <button
+              ref={stEl}
+              style={{ color: "yellow" }}
+              className={classes.starBt}
+              onClick={onClickStar}
+            >
+              ☆
+            </button>
+          ) : (
+            <button
+              ref={stEl}
+              style={{ color: "white" }}
+              className={classes.starBt}
+              onClick={onClickStar}
+            >
+              ☆
+            </button>
+          )}
           <Typography
             ref={wtEl}
             className={classes.boardNameText}

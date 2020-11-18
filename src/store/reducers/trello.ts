@@ -113,14 +113,24 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
           ],
         },
       ];
-
       return {
         ...state,
         boards: [...newBoard],
         newBoardId: state.newBoardId + 1,
       };
     }
-    case STAR_BOARD:
+    case STAR_BOARD: {
+      const newBoard: BoardType[] = [...state.boards];
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          newBoard[i].star = !newBoard[i].star;
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard] };
+    }
     case DELETE_BOARD:
       return state;
     case CHANGE_LIST_TITLE: {
