@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 const Trello = () => {
   const classes = useStyles();
 
-  const { boards } = useSelector<RootState, BoardState>(
+  const { starCount, boards } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
 
@@ -87,26 +87,28 @@ const Trello = () => {
             ))}
           </div>
         </div>
-        <div style={{ marginTop: "30px" }}>
-          <h3>Starred Boards</h3>
-          <div className={classes.boards}>
-            {boards.map((v, i) => {
-              if (v.star === true) {
-                return (
-                  <Link
-                    key={i}
-                    to={`/board/${v.id}`}
-                    className={classes.boardLink}
-                  >
-                    <div className={classes.boardBox}>{v.boardName}</div>
-                  </Link>
-                );
-              } else {
-                return null;
-              }
-            })}
+        {starCount === 0 ? null : (
+          <div style={{ marginTop: "30px" }}>
+            <h3>Starred Boards</h3>
+            <div className={classes.boards}>
+              {boards.map((v, i) => {
+                if (v.star === true) {
+                  return (
+                    <Link
+                      key={i}
+                      to={`/board/${v.id}`}
+                      className={classes.boardLink}
+                    >
+                      <div className={classes.boardBox}>{v.boardName}</div>
+                    </Link>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

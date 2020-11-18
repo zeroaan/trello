@@ -2,18 +2,24 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
-import { useRouteMatch } from "react-router";
+import { useRouteMatch, useHistory } from "react-router";
 import List from "components/List";
 import Navbar from "components/Navbar";
 import "app.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeBoardName, starBoard, addList } from "../store/actions/trello";
+import {
+  changeBoardName,
+  starBoard,
+  deleteBoard,
+  addList,
+} from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -61,6 +67,22 @@ const useStyles = makeStyles((theme) => ({
   },
   starBt: {
     margin: "0 16px",
+    backgroundColor: "rgba(154,160,163, 0.9)",
+    width: "35px",
+    height: "35px",
+    textTransform: "none",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "rgba(171,177,180, 0.9)",
+    },
+  },
+  deleteBt: {
+    position: "absolute",
+    right: "20px",
     backgroundColor: "rgba(154,160,163, 0.9)",
     width: "35px",
     height: "35px",
@@ -135,9 +157,64 @@ const useStyles = makeStyles((theme) => ({
     color: "rgb(108,120,141)",
     fontSize: "25px",
   },
+
+  deleteBoardbox: {
+    display: "none",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    zIndex: 1100,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  deleteBoard: {
+    backgroundColor: "rgb(235,236,240)",
+    width: "370px",
+    height: "200px",
+    margin: "auto",
+    position: "relative",
+    top: "230px",
+  },
+  deleteBoardtitle: {
+    position: "relative",
+    top: "25px",
+    left: "43px",
+  },
+  deleteBoarddesc: {
+    position: "relative",
+    top: "50px",
+    left: "83px",
+    fontSize: "20px",
+    color: "black",
+  },
+  deleteBoardBt: {
+    position: "relative",
+    top: "70px",
+    left: "110px",
+    outline: "none",
+    border: "none",
+    zIndex: 1200,
+    borderRadius: "5px",
+    backgroundColor: "rgb(250,60,84)",
+    marginTop: "10px",
+    color: "white",
+    padding: "8px 16px",
+    fontSize: "15px",
+    cursor: "pointer",
+  },
+  closeIconDeleteBoard: {
+    position: "relative",
+    top: "-35px",
+    left: "165px",
+    cursor: "pointer",
+    color: "rgb(108,120,141)",
+    fontSize: "28px",
+  },
 }));
 
 const Board = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const match = useRouteMatch<{ boardId: string }>();
   const boardId = Number(match.params.boardId);
@@ -166,6 +243,7 @@ const Board = () => {
   const wtEl = useRef<HTMLInputElement>(null);
   const stEl = useRef<HTMLButtonElement>(null);
   const addListEl = useRef<HTMLDivElement>(null);
+  const deleteBoardEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setBoardName(firstBoardName);
@@ -200,6 +278,21 @@ const Board = () => {
   };
   const onClickStar = () => {
     dispatch(starBoard(boardId));
+  };
+  const onClickDeleteBt = () => {
+    if (deleteBoardEl.current) {
+      deleteBoardEl.current.style.display = "block";
+    }
+  };
+  const onClickDeleteBoard = () => {
+    onClickCloseDeleteBoard();
+    dispatch(deleteBoard(boardId));
+    history.push("/");
+  };
+  const onClickCloseDeleteBoard = () => {
+    if (deleteBoardEl.current) {
+      deleteBoardEl.current.style.display = "none";
+    }
   };
 
   const onClickAddListBt = () => {
@@ -259,6 +352,29 @@ const Board = () => {
           >
             {boardName}
           </Typography>
+          <button className={classes.deleteBt} onClick={onClickDeleteBt}>
+            <DeleteOutlineIcon style={{ fontSize: "20px", color: "white" }} />
+          </button>
+          <div ref={deleteBoardEl} className={classes.deleteBoardbox}>
+            <Card className={classes.deleteBoard}>
+              <div>
+                <h3 className={classes.deleteBoardtitle}>Delete Board</h3>
+                <p className={classes.deleteBoarddesc}>
+                  삭제 후 되돌릴 수 없습니다.
+                </p>
+                <button
+                  className={classes.deleteBoardBt}
+                  onClick={onClickDeleteBoard}
+                >
+                  Delete This Board
+                </button>
+                <CloseIcon
+                  className={classes.closeIconDeleteBoard}
+                  onClick={onClickCloseDeleteBoard}
+                />
+              </div>
+            </Card>
+          </div>
           <form className={classes.boardNameForm} onSubmit={onSubmitForm}>
             <input
               ref={bnEl}

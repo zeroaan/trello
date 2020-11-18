@@ -35,11 +35,13 @@ type BoardType = {
 
 export interface BoardState {
   newBoardId: number;
+  starCount: number;
   boards: BoardType[];
 }
 
 const initialState: BoardState = {
   newBoardId: 2,
+  starCount: 1,
   boards: [
     {
       id: 1,
@@ -121,18 +123,34 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
     }
     case STAR_BOARD: {
       const newBoard: BoardType[] = [...state.boards];
+      let count = state.starCount;
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].star = !newBoard[i].star;
-          break;
+          if (newBoard[i].star === true) {
+            count = count + 1;
+          }
         }
         i = i + 1;
       }
-      return { ...state, boards: [...newBoard] };
+      return { ...state, boards: [...newBoard], starCount: count };
     }
-    case DELETE_BOARD:
-      return state;
+    case DELETE_BOARD: {
+      const newBoard: BoardType[] = [...state.boards];
+      let count = state.starCount;
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          if (newBoard[i].star === true) {
+            count = count - 1;
+          }
+          newBoard.splice(i, 1);
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard], starCount: count };
+    }
     case CHANGE_LIST_TITLE: {
       const newBoard: BoardType[] = [...state.boards];
       let i = 0;

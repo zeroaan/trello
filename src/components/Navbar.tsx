@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: `"Jua", sans-serif`,
     position: "relative",
     right: "20px",
+    userSelect: "none",
   },
   homeLink: {
     textDecoration: "none",

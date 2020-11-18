@@ -97,7 +97,7 @@ export const starBoard = (boardId: number) => {
     boardId,
   };
 };
-export const DeleteBoard = (boardId: number) => {
+export const deleteBoard = (boardId: number) => {
   return {
     type: DELETE_BOARD,
     boardId,
