@@ -1,4 +1,8 @@
 import {
+  CHANGE_BOARD_NAME,
+  ADD_BOARD,
+  STAR_BOARD,
+  DELETE_BOARD,
   CHANGE_LIST_TITLE,
   ADD_LIST,
   COPY_LIST,
@@ -8,6 +12,10 @@ import {
   DELETE_CARD,
 } from "../actions/types";
 import {
+  ChangeBoardNameAction,
+  AddBoardAction,
+  StarBoardAction,
+  DeleteBoardAction,
   ChangeListTitleAction,
   AddListAction,
   CopyListAction,
@@ -26,10 +34,12 @@ type BoardType = {
 };
 
 export interface BoardState {
+  newBoardId: number;
   boards: BoardType[];
 }
 
 const initialState: BoardState = {
+  newBoardId: 2,
   boards: [
     {
       id: 1,
@@ -61,6 +71,10 @@ const initialState: BoardState = {
 };
 
 type ListReducerActions =
+  | ChangeBoardNameAction
+  | AddBoardAction
+  | StarBoardAction
+  | DeleteBoardAction
   | ChangeListTitleAction
   | AddListAction
   | CopyListAction
@@ -70,6 +84,45 @@ type ListReducerActions =
   | DeleteCardAction;
 const BoardReducer = (state = initialState, action: ListReducerActions) => {
   switch (action.type) {
+    case CHANGE_BOARD_NAME: {
+      const newBoard: BoardType[] = [...state.boards];
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          newBoard[i].boardName = action.newBoardName;
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard] };
+    }
+    case ADD_BOARD: {
+      const newBoard: BoardType[] = [
+        ...state.boards,
+        {
+          id: state.newBoardId + 1,
+          star: false,
+          boardName: action.newBoardName,
+          lists: [
+            { title: "To do", list: [] },
+            {
+              title: "Doing",
+              list: [],
+            },
+            { title: "Complete", list: [] },
+          ],
+        },
+      ];
+
+      return {
+        ...state,
+        boards: [...newBoard],
+        newBoardId: state.newBoardId + 1,
+      };
+    }
+    case STAR_BOARD:
+    case DELETE_BOARD:
+      return state;
     case CHANGE_LIST_TITLE: {
       const newBoard: BoardType[] = [...state.boards];
       let i = 0;

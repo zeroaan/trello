@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useRef } from "react";
-import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
 import { useRouteMatch } from "react-router";
@@ -8,8 +7,8 @@ import List from "components/List";
 import Navbar from "components/Navbar";
 import "app.css";
 
-import { useDispatch } from "react-redux";
-import { addList } from "../store/actions/trello";
+import { useDispatch, useSelector } from "react-redux";
+import { changeBoardName, addList } from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -173,13 +172,16 @@ const Board = () => {
     }
   };
   const onBlurInput = () => {
+    dispatch(changeBoardName(boardName, boardId));
     setTextInput("invisible");
     if (boardName === "") {
-      setBoardName("My Board");
+      setBoardName("Board Name");
+      dispatch(changeBoardName("Board Name", boardId));
     }
   };
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    dispatch(changeBoardName(boardName, boardId));
     setTextInput("invisible");
   };
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,6 +257,7 @@ const Board = () => {
               onChange={onChangeName}
               required
               onBlur={onBlurInput}
+              maxLength={15}
             />
           </form>
         </div>

@@ -1,4 +1,8 @@
 import {
+  CHANGE_BOARD_NAME,
+  ADD_BOARD,
+  STAR_BOARD,
+  DELETE_BOARD,
   CHANGE_LIST_TITLE,
   ADD_LIST,
   COPY_LIST,
@@ -7,6 +11,24 @@ import {
   EDIT_CARD,
   DELETE_CARD,
 } from "./types";
+
+export interface ChangeBoardNameAction {
+  type: typeof CHANGE_BOARD_NAME;
+  newBoardName: string;
+  boardId: number;
+}
+export interface AddBoardAction {
+  type: typeof ADD_BOARD;
+  newBoardName: string;
+}
+export interface StarBoardAction {
+  type: typeof STAR_BOARD;
+  boardId: number;
+}
+export interface DeleteBoardAction {
+  type: typeof DELETE_BOARD;
+  boardId: number;
+}
 
 export interface ChangeListTitleAction {
   type: typeof CHANGE_LIST_TITLE;
@@ -55,6 +77,32 @@ export interface DeleteCardAction {
   listIndex: number;
   boardId: number;
 }
+
+export const changeBoardName = (newBoardName: string, boardId: number) => {
+  return {
+    type: CHANGE_BOARD_NAME,
+    newBoardName,
+    boardId,
+  };
+};
+export const addBoard = (newBoardName: string) => {
+  return {
+    type: ADD_BOARD,
+    newBoardName,
+  };
+};
+export const starBoard = (boardId: number) => {
+  return {
+    type: STAR_BOARD,
+    boardId,
+  };
+};
+export const DeleteBoard = (boardId: number) => {
+  return {
+    type: DELETE_BOARD,
+    boardId,
+  };
+};
 
 export const changeListTitle = (
   newTitle: string,
