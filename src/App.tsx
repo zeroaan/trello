@@ -9,12 +9,8 @@ const App = () => {
     <>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Switch>
-          <Route exact path="/">
-            <Trello />
-          </Route>
-          <Route exact path="/board">
-            <Board />
-          </Route>
+          <Route exact path="/" component={Trello} />
+          <Route exact path="/board/:boardId" component={Board} />
         </Switch>
       </BrowserRouter>
     </>

@@ -115,9 +115,10 @@ interface Props {
   list: string;
   index: number;
   listIndex: number;
+  boardId: number;
 }
 
-const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
+const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -169,7 +170,7 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
       if (editBlack.current) {
         editBlack.current.style.display = "none";
       }
-      dispatch(editCard(editList, index, listIndex));
+      dispatch(editCard(editList, index, listIndex, boardId));
     }
   };
   const onClickDelete = () => {
@@ -179,7 +180,7 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex }) => {
     if (editBlack.current) {
       editBlack.current.style.display = "none";
     }
-    dispatch(deleteCard(index, listIndex));
+    dispatch(deleteCard(index, listIndex, boardId));
   };
   const onClickClose = () => {
     if (editListEl.current) {

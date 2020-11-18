@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -73,12 +74,16 @@ const Navbar = () => {
       <AppBar className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.div}>
-            <IconButton className={classes.homeiconbutton} color="inherit">
-              <HomeIcon />
-            </IconButton>
-            <Button className={classes.button} color="inherit">
-              Boards
-            </Button>
+            <Link to="/">
+              <IconButton className={classes.homeiconbutton} color="inherit">
+                <HomeIcon />
+              </IconButton>
+            </Link>
+            <Link to="/">
+              <Button className={classes.button} color="inherit">
+                Boards
+              </Button>
+            </Link>
           </div>
           <Typography className={classes.typography} variant="h6">
             Trello

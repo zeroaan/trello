@@ -219,9 +219,10 @@ interface Props {
   title: string;
   list: string[];
   index: number;
+  boardId: number;
 }
 
-const List: React.FC<Props> = ({ title, list, index }) => {
+const List: React.FC<Props> = ({ title, list, index, boardId }) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -254,14 +255,14 @@ const List: React.FC<Props> = ({ title, list, index }) => {
     if (textInput.current) {
       textInput.current.style.display = "none";
     }
-    dispatch(changeListTitle(textTitle, index));
+    dispatch(changeListTitle(textTitle, index, boardId));
   };
   const onBlurInput = () => {
     if (textTitle !== "") {
       if (textInput.current) {
         textInput.current.style.display = "none";
       }
-      dispatch(changeListTitle(textTitle, index));
+      dispatch(changeListTitle(textTitle, index, boardId));
     }
   };
   const onClickAddBt = () => {
@@ -274,7 +275,7 @@ const List: React.FC<Props> = ({ title, list, index }) => {
   };
   const onClickAddCard = () => {
     if (card !== "") {
-      dispatch(addCard(card, index));
+      dispatch(addCard(card, index, boardId));
       setCard("");
     }
   };
@@ -327,13 +328,13 @@ const List: React.FC<Props> = ({ title, list, index }) => {
   const onClickAddList = () => {
     if (newList !== "") {
       onClickListAcClose();
-      dispatch(copyList(newList, index));
+      dispatch(copyList(newList, index, boardId));
       setNewList("");
     }
   };
   const onClickDeleteList = () => {
     onClickListAcClose();
-    dispatch(deleteList(index));
+    dispatch(deleteList(index, boardId));
   };
 
   return (
@@ -451,7 +452,13 @@ const List: React.FC<Props> = ({ title, list, index }) => {
         </div>
         <CardContent className={classes.cardContent}>
           {list.map((v, i) => (
-            <ListCard key={i} list={v} index={i} listIndex={index} />
+            <ListCard
+              key={i}
+              list={v}
+              index={i}
+              listIndex={index}
+              boardId={boardId}
+            />
           ))}
         </CardContent>
         <CardActions>

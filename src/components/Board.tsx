@@ -3,7 +3,9 @@ import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
+import { useRouteMatch } from "react-router";
 import List from "components/List";
+import Navbar from "components/Navbar";
 import "app.css";
 
 import { useDispatch } from "react-redux";
@@ -138,17 +140,26 @@ const useStyles = makeStyles((theme) => ({
 
 const Board = () => {
   const dispatch = useDispatch();
+  const match = useRouteMatch<{ boardId: string }>();
+  const boardId = Number(match.params.boardId);
 
   const classes = useStyles();
-
-  const [boardName, setBoardName] = useState("name");
-  const [textInput, setTextInput] = useState("invisible");
-  const [newList, setNewList] = useState("");
 
   const { boards } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
-  const lists = boards[0].lists;
+  let lists: { title: string; list: string[] }[] = [];
+  let firstBoardName: string = "";
+  boards.forEach((v, i) => {
+    if (v.id === boardId) {
+      lists = boards[i].lists;
+      firstBoardName = boards[i].boardName;
+    }
+  });
+
+  const [boardName, setBoardName] = useState(firstBoardName);
+  const [textInput, setTextInput] = useState("invisible");
+  const [newList, setNewList] = useState("");
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
@@ -203,7 +214,7 @@ const Board = () => {
       if (addListEl.current) {
         addListEl.current.style.display = "none";
       }
-      dispatch(addList(newList));
+      dispatch(addList(newList, boardId));
       setNewList("");
     }
   };
@@ -216,6 +227,7 @@ const Board = () => {
 
   return (
     <>
+      <Navbar />
       <div className={classes.screen}>
         <div className={classes.boardName}>
           <button
@@ -250,7 +262,13 @@ const Board = () => {
           {lists === undefined ? null : (
             <>
               {lists.map((v: { title: string; list: string[] }, i: number) => (
-                <List key={i} title={v.title} list={v.list} index={i} />
+                <List
+                  key={i}
+                  title={v.title}
+                  list={v.list}
+                  index={i}
+                  boardId={boardId}
+                />
               ))}
             </>
           )}
