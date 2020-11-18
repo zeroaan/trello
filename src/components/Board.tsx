@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { RootState } from "store/reducers";
-import { BoardState } from "store/reducers/trello";
+import { BoardState, ListType } from "store/reducers/trello";
 import { useRouteMatch, useHistory } from "react-router";
 import List from "components/List";
 import Navbar from "components/Navbar";
@@ -224,7 +224,7 @@ const Board = () => {
   const { boards } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
-  let lists: { title: string; list: string[] }[] = [];
+  let lists: ListType = [];
   let firstBoardName: string = "";
   let boardStar: boolean = false;
   boards.forEach((v, i) => {
@@ -391,11 +391,11 @@ const Board = () => {
         <div style={{ display: "flex" }}>
           {lists === undefined ? null : (
             <>
-              {lists.map((v: { title: string; list: string[] }, i: number) => (
+              {lists.map((v: { title: string; cards: string[] }, i: number) => (
                 <List
                   key={i}
                   title={v.title}
-                  list={v.list}
+                  list={v.cards}
                   index={i}
                   boardId={boardId}
                 />

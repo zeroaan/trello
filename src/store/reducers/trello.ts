@@ -25,8 +25,8 @@ import {
   DeleteCardAction,
 } from "../actions/trello";
 
-type ListType = { title: string; list: string[] }[];
-type BoardType = {
+export type ListType = { title: string; cards: string[] }[];
+export type BoardType = {
   id: number;
   star: boolean;
   boardName: string;
@@ -48,12 +48,12 @@ const initialState: BoardState = {
       star: true,
       boardName: "first board",
       lists: [
-        { title: "To do", list: ["doing", "test a game", "post", "hello"] },
+        { title: "To do", cards: ["doing", "test a game", "post", "hello"] },
         {
           title: "Doing",
-          list: ["go to school", "watch"],
+          cards: ["go to school", "watch"],
         },
-        { title: "Complete", list: ["pratice", "finish", "complete"] },
+        { title: "Complete", cards: ["pratice", "finish", "complete"] },
       ],
     },
     {
@@ -61,12 +61,12 @@ const initialState: BoardState = {
       star: false,
       boardName: "second board",
       lists: [
-        { title: "To do", list: ["wow", "my second board", "front"] },
+        { title: "To do", cards: ["wow", "my second board", "front"] },
         {
           title: "Doing",
-          list: ["buy coffee", "movie", "go to park", "learn math"],
+          cards: ["buy coffee", "movie", "go to park", "learn math"],
         },
-        { title: "Complete", list: ["go to the gym", "computer"] },
+        { title: "Complete", cards: ["go to the gym", "computer"] },
       ],
     },
   ],
@@ -106,12 +106,12 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
           star: false,
           boardName: action.newBoardName,
           lists: [
-            { title: "To do", list: [] },
+            { title: "To do", cards: [] },
             {
               title: "Doing",
-              list: [],
+              cards: [],
             },
-            { title: "Complete", list: [] },
+            { title: "Complete", cards: [] },
           ],
         },
       ];
@@ -123,14 +123,14 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
     }
     case STAR_BOARD: {
       const newBoard: BoardType[] = [...state.boards];
-      let count = state.starCount;
+      let count = 0;
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].star = !newBoard[i].star;
-          if (newBoard[i].star === true) {
-            count = count + 1;
-          }
+        }
+        if (newBoard[i].star === true) {
+          count = count + 1;
         }
         i = i + 1;
       }
@@ -170,7 +170,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists = [
             ...newBoard[i].lists,
-            { title: action.title, list: [] },
+            { title: action.title, cards: [] },
           ];
           break;
         }
@@ -185,7 +185,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists.splice(action.index + 1, 0, {
             title: action.title,
-            list: [...newBoard[i].lists[action.index].list],
+            cards: [...newBoard[i].lists[action.index].cards],
           });
           break;
         }
@@ -210,8 +210,8 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
-          newBoard[i].lists[action.index].list = [
-            ...newBoard[i].lists[action.index].list,
+          newBoard[i].lists[action.index].cards = [
+            ...newBoard[i].lists[action.index].cards,
             action.card,
           ];
           break;
@@ -225,7 +225,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
-          newBoard[i].lists[action.listIndex].list[action.index] =
+          newBoard[i].lists[action.listIndex].cards[action.index] =
             action.newCard;
           break;
         }
@@ -238,7 +238,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
-          newBoard[i].lists[action.listIndex].list.splice(action.index, 1);
+          newBoard[i].lists[action.listIndex].cards.splice(action.index, 1);
           break;
         }
         i = i + 1;
