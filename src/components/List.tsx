@@ -1,14 +1,15 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import ListCard from "components/ListCard";
-
 import { useDispatch } from "react-redux";
+
 import {
   changeListTitle,
   addCard,
   copyList,
   deleteList,
-} from "../store/actions/trello";
+} from "store/actions/trello";
+
+import ListCard from "components/ListCard";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -18,10 +19,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import CloseIcon from "@material-ui/icons/Close";
-
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   list: {
     flexShrink: 0,
     position: "relative",
@@ -213,7 +213,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "15px",
     cursor: "pointer",
   },
-}));
+});
 
 interface Props {
   title: string;

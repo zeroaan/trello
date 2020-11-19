@@ -1,16 +1,15 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-
 import { useDispatch } from "react-redux";
-import { editCard, deleteCard } from "../store/actions/trello";
+
+import { editCard, deleteCard } from "store/actions/trello";
 
 import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
-
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   list: {
     minHeight: "20px",
     position: "relative",
@@ -109,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "25px",
     zIndex: 1200,
   },
-}));
+});
 
 interface Props {
   list: string;

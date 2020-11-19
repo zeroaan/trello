@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
 
@@ -8,7 +9,7 @@ import Navbar from "components/Navbar";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   screen: {
     maxWidth: "98vw",
     maxHeight: "90vh",
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "rgb(231,233,237)",
     },
   },
-}));
+});
 
 const Trello = () => {
   const classes = useStyles();

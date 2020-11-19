@@ -1,27 +1,26 @@
 import React from "react";
 import { useState, useRef } from "react";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addBoard } from "store/actions/trello";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
-import { Link } from "react-router-dom";
-
-import { useDispatch, useSelector } from "react-redux";
-import { addBoard } from "../store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
-import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
-
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   appbar: {
     backgroundColor: "rgba(0, 0, 0, 0.1)",
     boxShadow: "none",
@@ -140,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgb(108,120,141)",
     fontSize: "28px",
   },
-}));
+});
 
 const Navbar = () => {
   const history = useHistory();

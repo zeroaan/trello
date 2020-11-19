@@ -1,29 +1,28 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import { RootState } from "store/reducers";
-import { BoardState, ListType } from "store/reducers/trello";
 import { useRouteMatch, useHistory } from "react-router";
-import List from "components/List";
-import Navbar from "components/Navbar";
-import "app.css";
-
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   changeBoardName,
   starBoard,
   deleteBoard,
   addList,
-} from "../store/actions/trello";
+} from "store/actions/trello";
+import { RootState } from "store/reducers";
+import { BoardState, ListType } from "store/reducers/trello";
+
+import List from "components/List";
+import Navbar from "components/Navbar";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   screen: {
     maxWidth: "98vw",
     maxHeight: "90vh",
@@ -211,7 +210,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgb(108,120,141)",
     fontSize: "28px",
   },
-}));
+});
 
 const Board = () => {
   const history = useHistory();
