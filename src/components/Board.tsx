@@ -19,7 +19,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -63,6 +63,7 @@ const useStyles = makeStyles({
     height: "34px",
     fontSize: "18px",
     whiteSpace: "pre",
+    display: "none",
   },
   starBt: {
     margin: "0 16px",
@@ -75,6 +76,7 @@ const useStyles = makeStyles({
     borderRadius: "5px",
     fontWeight: "bold",
     cursor: "pointer",
+    fontSize: "16px",
     "&:hover": {
       backgroundColor: "rgba(171,177,180, 0.9)",
     },
@@ -156,7 +158,6 @@ const useStyles = makeStyles({
     color: "rgb(108,120,141)",
     fontSize: "25px",
   },
-
   deleteBoardbox: {
     display: "none",
     position: "fixed",
@@ -213,13 +214,13 @@ const useStyles = makeStyles({
 });
 
 const Board = () => {
+  const classes = useStyles();
+
   const history = useHistory();
-  const dispatch = useDispatch();
   const match = useRouteMatch<{ boardId: string }>();
   const boardId = Number(match.params.boardId);
 
-  const classes = useStyles();
-
+  const dispatch = useDispatch();
   const { boards } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
@@ -235,7 +236,6 @@ const Board = () => {
   });
 
   const [boardName, setBoardName] = useState(firstBoardName);
-  const [textInput, setTextInput] = useState("invisible");
   const [newList, setNewList] = useState("");
 
   const bnEl = useRef<HTMLInputElement>(null);
@@ -248,29 +248,39 @@ const Board = () => {
     setBoardName(firstBoardName);
   }, [firstBoardName]);
 
+  const displayBlock = (
+    ref: React.RefObject<HTMLInputElement | HTMLDivElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "block";
+    }
+  };
+  const displayNone = (
+    ref: React.RefObject<HTMLInputElement | HTMLDivElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "none";
+    }
+  };
   const onClickText = () => {
-    setTextInput("");
+    displayBlock(bnEl);
     if (bnEl.current && wtEl.current) {
       bnEl.current.style.width = wtEl.current.scrollWidth - 24 + "px";
     }
   };
-  const onBlurInput = () => {
-    dispatch(changeBoardName(boardName, boardId));
-    setTextInput("invisible");
-    if (boardName === "") {
-      setBoardName("Board Name");
-      dispatch(changeBoardName("Board Name", boardId));
-    }
-  };
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(changeBoardName(boardName, boardId));
-    setTextInput("invisible");
+    onBlurInput();
+  };
+  const onBlurInput = () => {
+    if (boardName !== "") {
+      displayNone(bnEl);
+      dispatch(changeBoardName(boardName, boardId));
+    }
   };
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setBoardName(value);
-
     if (bnEl.current && wtEl.current) {
       bnEl.current.style.width = wtEl.current.scrollWidth - 8 + "px";
     }
@@ -278,26 +288,10 @@ const Board = () => {
   const onClickStar = () => {
     dispatch(starBoard(boardId));
   };
-  const onClickDeleteBt = () => {
-    if (deleteBoardEl.current) {
-      deleteBoardEl.current.style.display = "block";
-    }
-  };
   const onClickDeleteBoard = () => {
-    onClickCloseDeleteBoard();
+    displayNone(deleteBoardEl);
     dispatch(deleteBoard(boardId));
     history.push("/");
-  };
-  const onClickCloseDeleteBoard = () => {
-    if (deleteBoardEl.current) {
-      deleteBoardEl.current.style.display = "none";
-    }
-  };
-
-  const onClickAddListBt = () => {
-    if (addListEl.current) {
-      addListEl.current.style.display = "block";
-    }
   };
   const onChangeList = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -305,17 +299,12 @@ const Board = () => {
   };
   const onClickAddList = () => {
     if (newList !== "") {
-      if (addListEl.current) {
-        addListEl.current.style.display = "none";
-      }
       dispatch(addList(newList, boardId));
-      setNewList("");
+      onClickClose();
     }
   };
   const onClickClose = () => {
-    if (addListEl.current) {
-      addListEl.current.style.display = "none";
-    }
+    displayNone(addListEl);
     setNewList("");
   };
 
@@ -351,8 +340,11 @@ const Board = () => {
           >
             {boardName}
           </Typography>
-          <button className={classes.deleteBt} onClick={onClickDeleteBt}>
-            <DeleteOutlineIcon style={{ fontSize: "20px", color: "white" }} />
+          <button
+            className={classes.deleteBt}
+            onClick={() => displayBlock(deleteBoardEl)}
+          >
+            <DeleteIcon style={{ fontSize: "20px", color: "white" }} />
           </button>
           <div ref={deleteBoardEl} className={classes.deleteBoardbox}>
             <Card className={classes.deleteBoard}>
@@ -369,7 +361,7 @@ const Board = () => {
                 </button>
                 <CloseIcon
                   className={classes.closeIconDeleteBoard}
-                  onClick={onClickCloseDeleteBoard}
+                  onClick={() => displayNone(deleteBoardEl)}
                 />
               </div>
             </Card>
@@ -377,11 +369,9 @@ const Board = () => {
           <form className={classes.boardNameForm} onSubmit={onSubmitForm}>
             <input
               ref={bnEl}
-              id={textInput}
               className={classes.boardNameInput}
               value={boardName}
               onChange={onChangeName}
-              required
               onBlur={onBlurInput}
               maxLength={15}
             />
@@ -404,7 +394,7 @@ const Board = () => {
           <div style={{ position: "relative" }}>
             <Button
               className={classes.addBt}
-              onClick={onClickAddListBt}
+              onClick={() => displayBlock(addListEl)}
               disableRipple
             >
               <div style={{ position: "absolute", left: "20px" }}>

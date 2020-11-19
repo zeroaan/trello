@@ -108,6 +108,16 @@ const useStyles = makeStyles({
     fontSize: "25px",
     zIndex: 1200,
   },
+  blackBox: {
+    display: "none",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    zIndex: 1100,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
 });
 
 interface Props {
@@ -133,23 +143,23 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
     setEditList(list);
   }, [list]);
 
-  const onMouseOver = () => {
-    if (editEl.current) {
-      editEl.current.style.display = "block";
+  const displayBlock = (
+    ref: React.RefObject<HTMLDivElement | SVGSVGElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "block";
     }
   };
-  const onMouseOut = () => {
-    if (editEl.current) {
-      editEl.current.style.display = "none";
+  const displayNone = (
+    ref: React.RefObject<HTMLDivElement | SVGSVGElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "none";
     }
   };
   const onClickEditList = () => {
-    if (editListEl.current) {
-      editListEl.current.style.display = "block";
-    }
-    if (editBlack.current) {
-      editBlack.current.style.display = "block";
-    }
+    displayBlock(editListEl);
+    displayBlock(editBlack);
     if (paperEl.current && textareaEl.current) {
       textareaEl.current.style.width = `${paperEl.current.scrollWidth - 24}px`;
     }
@@ -163,40 +173,19 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
   };
   const onClickSave = () => {
     if (editList !== "") {
-      if (editListEl.current) {
-        editListEl.current.style.display = "none";
-      }
-      if (editBlack.current) {
-        editBlack.current.style.display = "none";
-      }
+      displayNone(editListEl);
+      displayNone(editBlack);
       dispatch(editCard(editList, index, listIndex, boardId));
     }
   };
   const onClickDelete = () => {
-    if (editListEl.current) {
-      editListEl.current.style.display = "none";
-    }
-    if (editBlack.current) {
-      editBlack.current.style.display = "none";
-    }
+    displayNone(editListEl);
+    displayNone(editBlack);
     dispatch(deleteCard(index, listIndex, boardId));
   };
   const onClickClose = () => {
-    if (editListEl.current) {
-      editListEl.current.style.display = "none";
-    }
-    if (editBlack.current) {
-      editBlack.current.style.display = "none";
-    }
-    setEditList(list);
-  };
-  const onClickEditBlack = () => {
-    if (editListEl.current) {
-      editListEl.current.style.display = "none";
-    }
-    if (editBlack.current) {
-      editBlack.current.style.display = "none";
-    }
+    displayNone(editListEl);
+    displayNone(editBlack);
     setEditList(list);
   };
 
@@ -205,8 +194,8 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
       <Paper
         ref={paperEl}
         className={classes.list}
-        onMouseOver={onMouseOver}
-        onMouseOut={onMouseOut}
+        onMouseOver={() => displayBlock(editEl)}
+        onMouseOut={() => displayNone(editEl)}
       >
         <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>{list}</p>
         <CreateIcon
@@ -217,17 +206,8 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
       </Paper>
       <div
         ref={editBlack}
-        style={{
-          display: "none",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          zIndex: 1100,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-        }}
-        onClick={onClickEditBlack}
+        className={classes.blackBox}
+        onClick={onClickClose}
       ></div>
       <div ref={editListEl} className={classes.editListform}>
         <div style={{ height: "82px" }}></div>

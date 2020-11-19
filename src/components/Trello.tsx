@@ -76,7 +76,6 @@ const Trello = () => {
   return (
     <>
       <Navbar />
-
       <div className={classes.screen}>
         <div>
           <h3>My Boards</h3>

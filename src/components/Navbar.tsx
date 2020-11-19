@@ -142,16 +142,17 @@ const useStyles = makeStyles({
 });
 
 const Navbar = () => {
-  const history = useHistory();
-  const dispatch = useDispatch();
-
   const classes = useStyles();
 
+  const history = useHistory();
+
+  const dispatch = useDispatch();
   const { newBoardId } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
 
   const [newBoard, setNewBoard] = useState("");
+
   const newBoardEl = useRef<HTMLDivElement>(null);
 
   const onChangeBoard = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,8 +198,12 @@ const Navbar = () => {
             Trello
           </Typography>
           <div className={classes.div}>
-            <IconButton className={classes.addiconbutton} color="inherit">
-              <AddIcon onClick={onClickNewBoard} />
+            <IconButton
+              className={classes.addiconbutton}
+              color="inherit"
+              onClick={onClickNewBoard}
+            >
+              <AddIcon />
             </IconButton>
             <Avatar className={classes.avatar}>A</Avatar>
           </div>

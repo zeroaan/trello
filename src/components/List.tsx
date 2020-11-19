@@ -241,37 +241,37 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
     setTextTitle(title);
   }, [title]);
 
+  const displayBlock = (
+    ref: React.RefObject<HTMLButtonElement | HTMLInputElement | HTMLDivElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "block";
+    }
+  };
+  const displayNone = (
+    ref: React.RefObject<HTMLButtonElement | HTMLInputElement | HTMLDivElement>
+  ) => {
+    if (ref.current) {
+      ref.current.style.display = "none";
+    }
+  };
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setTextTitle(value);
   };
-  const onClickName = () => {
-    if (textInput.current) {
-      textInput.current.style.display = "block";
-    }
-  };
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (textInput.current) {
-      textInput.current.style.display = "none";
-    }
-    dispatch(changeListTitle(textTitle, index, boardId));
+    onBlurInput();
   };
   const onBlurInput = () => {
     if (textTitle !== "") {
-      if (textInput.current) {
-        textInput.current.style.display = "none";
-      }
+      displayNone(textInput);
       dispatch(changeListTitle(textTitle, index, boardId));
     }
   };
   const onClickAddBt = () => {
-    if (cardInput.current) {
-      cardInput.current.style.display = "block";
-    }
-    if (cardAdd.current) {
-      cardAdd.current.style.display = "none";
-    }
+    displayBlock(cardInput);
+    displayNone(cardAdd);
   };
   const onClickAddCard = () => {
     if (card !== "") {
@@ -284,25 +284,13 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
     setCard(value);
   };
   const onClickClose = () => {
-    if (cardInput.current) {
-      cardInput.current.style.display = "none";
-    }
-    if (cardAdd.current) {
-      cardAdd.current.style.display = "block";
-    }
-  };
-
-  const onClickListAc = () => {
-    if (listAcEl.current) {
-      listAcEl.current.style.display = "block";
-    }
+    displayBlock(cardAdd);
+    displayNone(cardInput);
   };
   const onClickListAcClose = () => {
-    if (listAcEl.current && listAcCpEl.current && listAcDlEl.current) {
-      listAcEl.current.style.display = "none";
-      listAcCpEl.current.style.display = "none";
-      listAcDlEl.current.style.display = "none";
-    }
+    displayNone(listAcEl);
+    displayNone(listAcCpEl);
+    displayNone(listAcDlEl);
     setNewList("");
   };
   const onClickListAcAddCard = () => {
@@ -310,16 +298,12 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
     onClickAddBt();
   };
   const onClickListAcCopy = () => {
-    if (listAcEl.current && listAcCpEl.current) {
-      listAcEl.current.style.display = "none";
-      listAcCpEl.current.style.display = "block";
-    }
+    displayNone(listAcEl);
+    displayBlock(listAcCpEl);
   };
   const onClickListAcDelete = () => {
-    if (listAcEl.current && listAcDlEl.current) {
-      listAcEl.current.style.display = "none";
-      listAcDlEl.current.style.display = "block";
-    }
+    displayNone(listAcEl);
+    displayBlock(listAcDlEl);
   };
   const onChangeList = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -343,7 +327,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
         <CardHeader
           className={classes.listName}
           title={title}
-          onClick={onClickName}
+          onClick={() => displayBlock(textInput)}
           disableTypography
         />
         <form className={classes.listNameForm} onSubmit={onSubmitForm}>
@@ -352,12 +336,14 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
             className={classes.listNameInput}
             value={textTitle}
             onChange={onChangeInput}
-            required
             onBlur={onBlurInput}
             maxLength={15}
           />
         </form>
-        <button className={classes.menuBt} onClick={onClickListAc}>
+        <button
+          className={classes.menuBt}
+          onClick={() => displayBlock(listAcEl)}
+        >
           ⋯
         </button>
         <div onMouseLeave={onClickListAcClose}>
