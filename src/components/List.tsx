@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { Droppable } from "react-beautiful-dnd";
 
 import {
   changeListTitle,
@@ -8,6 +9,7 @@ import {
   copyList,
   deleteList,
 } from "store/actions/trello";
+import { CardType } from "store/reducers/trello";
 
 import ListCard from "components/ListCard";
 
@@ -217,7 +219,7 @@ const useStyles = makeStyles({
 
 interface Props {
   title: string;
-  list: string[];
+  list: CardType;
   index: number;
   boardId: number;
 }
@@ -327,153 +329,166 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
 
   return (
     <>
-      <Card className={classes.list} onDragOver={onDragOverCard}>
-        <CardHeader
-          className={classes.listName}
-          title={title}
-          onClick={() => displayBlock(textInput)}
-          disableTypography
-        />
-        <form className={classes.listNameForm} onSubmit={onSubmitForm}>
-          <input
-            ref={textInput}
-            className={classes.listNameInput}
-            value={textTitle}
-            onChange={onChangeInput}
-            onBlur={onBlurInput}
-            maxLength={15}
-          />
-        </form>
-        <button
-          className={classes.menuBt}
-          onClick={() => displayBlock(listAcEl)}
-        >
-          ⋯
-        </button>
-        <div onMouseLeave={onClickListAcClose}>
-          <Paper ref={listAcEl} className={classes.listAc}>
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              List Actions
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
-            />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdivBt}>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcAddCard}
-                disableRipple
-              >
-                Add Card
-              </Button>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcCopy}
-                disableRipple
-              >
-                Copy List
-              </Button>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcDelete}
-                disableRipple
-              >
-                Delete This List
-              </Button>
-            </div>
-          </Paper>
-          <Paper
-            ref={listAcCpEl}
-            className={classes.listAc}
-            onMouseLeave={onClickListAcClose}
+      <Droppable droppableId={String(boardId)}>
+        {(provided) => (
+          <Card
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className={classes.list}
+            onDragOver={onDragOverCard}
           >
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              Copy List
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
+            <CardHeader
+              className={classes.listName}
+              title={title}
+              onClick={() => displayBlock(textInput)}
+              disableTypography
             />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdiv}>
-              <p>Name</p>
+            <form className={classes.listNameForm} onSubmit={onSubmitForm}>
               <input
-                className={classes.listAcaddListInput}
-                placeholder="Input List title ..."
-                onChange={onChangeList}
-                value={newList}
+                ref={textInput}
+                className={classes.listNameInput}
+                value={textTitle}
+                onChange={onChangeInput}
+                onBlur={onBlurInput}
                 maxLength={15}
               />
-              <button
-                className={classes.listAcaddListBt}
-                onClick={onClickAddList}
-              >
-                Create
-              </button>
-            </div>
-          </Paper>
-          <Paper
-            ref={listAcDlEl}
-            className={classes.listAc}
-            onMouseLeave={onClickListAcClose}
-          >
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              Delete List
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
-            />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdiv}>
-              <p style={{ margin: "35px 0 20px 0" }}>
-                삭제 후 되돌릴 수 없습니다.
-              </p>
-              <button
-                className={classes.listAcDeleteListBt}
-                onClick={onClickDeleteList}
-              >
-                Delete
-              </button>
-            </div>
-          </Paper>
-        </div>
-        <CardContent ref={test} className={classes.cardContent}>
-          {list.map((v, i) => (
-            <ListCard
-              key={i}
-              list={v}
-              index={i}
-              listIndex={index}
-              boardId={boardId}
-            />
-          ))}
-        </CardContent>
-        <CardActions>
-          <Button
-            ref={cardAdd}
-            className={classes.addBt}
-            onClick={onClickAddBt}
-            disableRipple
-          >
-            + Add a Card
-          </Button>
-          <div ref={cardInput} className={classes.addBtText}>
-            <textarea
-              className={classes.addCardInput}
-              placeholder="Input card ..."
-              onChange={onChangeCard}
-              value={card}
-            />
-            <button className={classes.addCardBt} onClick={onClickAddCard}>
-              Add Card
+            </form>
+            <button
+              className={classes.menuBt}
+              onClick={() => displayBlock(listAcEl)}
+            >
+              ⋯
             </button>
-            <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
-          </div>
-        </CardActions>
-      </Card>
+            <div onMouseLeave={onClickListAcClose}>
+              <Paper ref={listAcEl} className={classes.listAc}>
+                <Typography className={classes.listAcTitle} variant="subtitle1">
+                  List Actions
+                </Typography>
+                <CloseIcon
+                  className={classes.listAcClose}
+                  onClick={onClickListAcClose}
+                />
+                <hr className={classes.listAcHr} />
+                <div className={classes.listAcdivBt}>
+                  <Button
+                    className={classes.listAcBt}
+                    onClick={onClickListAcAddCard}
+                    disableRipple
+                  >
+                    Add Card
+                  </Button>
+                  <Button
+                    className={classes.listAcBt}
+                    onClick={onClickListAcCopy}
+                    disableRipple
+                  >
+                    Copy List
+                  </Button>
+                  <Button
+                    className={classes.listAcBt}
+                    onClick={onClickListAcDelete}
+                    disableRipple
+                  >
+                    Delete This List
+                  </Button>
+                </div>
+              </Paper>
+              <Paper
+                ref={listAcCpEl}
+                className={classes.listAc}
+                onMouseLeave={onClickListAcClose}
+              >
+                <Typography className={classes.listAcTitle} variant="subtitle1">
+                  Copy List
+                </Typography>
+                <CloseIcon
+                  className={classes.listAcClose}
+                  onClick={onClickListAcClose}
+                />
+                <hr className={classes.listAcHr} />
+                <div className={classes.listAcdiv}>
+                  <p>Name</p>
+                  <input
+                    className={classes.listAcaddListInput}
+                    placeholder="Input List title ..."
+                    onChange={onChangeList}
+                    value={newList}
+                    maxLength={15}
+                  />
+                  <button
+                    className={classes.listAcaddListBt}
+                    onClick={onClickAddList}
+                  >
+                    Create
+                  </button>
+                </div>
+              </Paper>
+              <Paper
+                ref={listAcDlEl}
+                className={classes.listAc}
+                onMouseLeave={onClickListAcClose}
+              >
+                <Typography className={classes.listAcTitle} variant="subtitle1">
+                  Delete List
+                </Typography>
+                <CloseIcon
+                  className={classes.listAcClose}
+                  onClick={onClickListAcClose}
+                />
+                <hr className={classes.listAcHr} />
+                <div className={classes.listAcdiv}>
+                  <p style={{ margin: "35px 0 20px 0" }}>
+                    삭제 후 되돌릴 수 없습니다.
+                  </p>
+                  <button
+                    className={classes.listAcDeleteListBt}
+                    onClick={onClickDeleteList}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </Paper>
+            </div>
+            <CardContent ref={test} className={classes.cardContent}>
+              {list.map((v, i) => (
+                <ListCard
+                  key={i}
+                  list={v.text}
+                  index={i}
+                  listIndex={index}
+                  boardId={boardId}
+                />
+              ))}
+            </CardContent>
+            <CardActions>
+              <Button
+                ref={cardAdd}
+                className={classes.addBt}
+                onClick={onClickAddBt}
+                disableRipple
+              >
+                + Add a Card
+              </Button>
+              <div ref={cardInput} className={classes.addBtText}>
+                <textarea
+                  className={classes.addCardInput}
+                  placeholder="Input card ..."
+                  onChange={onChangeCard}
+                  value={card}
+                />
+                <button className={classes.addCardBt} onClick={onClickAddCard}>
+                  Add Card
+                </button>
+                <CloseIcon
+                  className={classes.closeIcon}
+                  onClick={onClickClose}
+                />
+              </div>
+            </CardActions>
+            {provided.placeholder}
+          </Card>
+        )}
+      </Droppable>
     </>
   );
 };

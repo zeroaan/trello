@@ -25,7 +25,15 @@ import {
   DeleteCardAction,
 } from "../actions/trello";
 
-export type ListType = { title: string; cards: string[] }[];
+export type CardType = {
+  id: number;
+  text: string;
+}[];
+export type ListType = {
+  title: string;
+  newCardId: number;
+  cards: CardType;
+}[];
 export type BoardType = {
   id: number;
   star: boolean;
@@ -40,33 +48,75 @@ export interface BoardState {
 }
 
 const initialState: BoardState = {
-  newBoardId: 2,
+  newBoardId: 1,
   starCount: 1,
   boards: [
     {
-      id: 1,
+      id: 0,
       star: true,
       boardName: "first board",
       lists: [
-        { title: "To do", cards: ["doing", "test a game", "post", "hello"] },
+        {
+          title: "To do",
+          newCardId: 4,
+          cards: [
+            { id: 0, text: "doing" },
+            { id: 1, text: "test a game" },
+            { id: 2, text: "post" },
+            { id: 3, text: "hello" },
+          ],
+        },
         {
           title: "Doing",
-          cards: ["go to school", "watch"],
+          newCardId: 2,
+          cards: [
+            { id: 0, text: "go to school" },
+            { id: 1, text: "watch" },
+          ],
         },
-        { title: "Complete", cards: ["pratice", "finish", "complete"] },
+        {
+          title: "Complete",
+          newCardId: 3,
+          cards: [
+            { id: 0, text: "pratice" },
+            { id: 1, text: "finish" },
+            { id: 2, text: "complete" },
+          ],
+        },
       ],
     },
     {
-      id: 2,
+      id: 1,
       star: false,
       boardName: "second board",
       lists: [
-        { title: "To do", cards: ["wow", "my second board", "front"] },
+        {
+          title: "To do",
+          newCardId: 3,
+          cards: [
+            { id: 0, text: "wow" },
+            { id: 1, text: "my second board" },
+            { id: 2, text: "front" },
+          ],
+        },
         {
           title: "Doing",
-          cards: ["buy coffee", "movie", "go to park", "learn math"],
+          newCardId: 4,
+          cards: [
+            { id: 0, text: "buy coffee" },
+            { id: 1, text: "movie" },
+            { id: 2, text: "go to park" },
+            { id: 3, text: "learn math" },
+          ],
         },
-        { title: "Complete", cards: ["go to the gym", "computer"] },
+        {
+          title: "Complete",
+          newCardId: 2,
+          cards: [
+            { id: 0, text: "go to the gym" },
+            { id: 1, text: "computer" },
+          ],
+        },
       ],
     },
   ],
@@ -106,12 +156,13 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
           star: false,
           boardName: action.newBoardName,
           lists: [
-            { title: "To do", cards: [] },
+            { title: "To do", newCardId: 0, cards: [] },
             {
               title: "Doing",
+              newCardId: 0,
               cards: [],
             },
-            { title: "Complete", cards: [] },
+            { title: "Complete", newCardId: 0, cards: [] },
           ],
         },
       ];
@@ -170,7 +221,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists = [
             ...newBoard[i].lists,
-            { title: action.title, cards: [] },
+            { title: action.title, newCardId: 0, cards: [] },
           ];
           break;
         }
@@ -185,6 +236,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists.splice(action.index + 1, 0, {
             title: action.title,
+            newCardId: newBoard[i].lists[action.index].newCardId,
             cards: [...newBoard[i].lists[action.index].cards],
           });
           break;
@@ -212,8 +264,12 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists[action.index].cards = [
             ...newBoard[i].lists[action.index].cards,
-            action.card,
+            {
+              id: newBoard[i].lists[action.index].newCardId,
+              text: action.card,
+            },
           ];
+          newBoard[i].lists[action.index].newCardId += 1;
           break;
         }
         i = i + 1;
@@ -225,7 +281,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
-          newBoard[i].lists[action.listIndex].cards[action.index] =
+          newBoard[i].lists[action.listIndex].cards[action.index].text =
             action.newCard;
           break;
         }
@@ -243,6 +299,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         }
         i = i + 1;
       }
+      console.log(newBoard);
       return { ...state, boards: [...newBoard] };
     }
     default:

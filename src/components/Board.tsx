@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { useRouteMatch, useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import {
   changeBoardName,
@@ -10,7 +11,7 @@ import {
   addList,
 } from "store/actions/trello";
 import { RootState } from "store/reducers";
-import { BoardState, ListType } from "store/reducers/trello";
+import { BoardState, ListType, CardType } from "store/reducers/trello";
 
 import List from "components/List";
 import Navbar from "components/Navbar";
@@ -308,6 +309,8 @@ const Board = () => {
     setNewList("");
   };
 
+  const onDragEnd = () => {};
+
   return (
     <>
       <Navbar />
@@ -377,51 +380,58 @@ const Board = () => {
             />
           </form>
         </div>
-        <div style={{ display: "flex" }}>
-          {lists === undefined ? null : (
-            <>
-              {lists.map((v: { title: string; cards: string[] }, i: number) => (
-                <List
-                  key={i}
-                  title={v.title}
-                  list={v.cards}
-                  index={i}
-                  boardId={boardId}
-                />
-              ))}
-            </>
-          )}
-          <div style={{ position: "relative" }}>
-            <Button
-              className={classes.addBt}
-              onClick={() => displayBlock(addListEl)}
-              disableRipple
-            >
-              <div style={{ position: "absolute", left: "20px" }}>
-                + Add a List
-              </div>
-            </Button>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div style={{ display: "flex" }}>
+            {lists === undefined ? null : (
+              <>
+                {lists.map(
+                  (v: { title: string; cards: CardType }, i: number) => (
+                    <List
+                      key={i}
+                      title={v.title}
+                      list={v.cards}
+                      index={i}
+                      boardId={boardId}
+                    />
+                  )
+                )}
+              </>
+            )}
+            <div style={{ position: "relative" }}>
+              <Button
+                className={classes.addBt}
+                onClick={() => displayBlock(addListEl)}
+                disableRipple
+              >
+                <div style={{ position: "absolute", left: "20px" }}>
+                  + Add a List
+                </div>
+              </Button>
 
-            <Card ref={addListEl} className={classes.addList}>
-              <div className={classes.addBtText}>
-                <input
-                  className={classes.addListInput}
-                  placeholder="Input List title ..."
-                  onChange={onChangeList}
-                  value={newList}
-                  maxLength={15}
-                />
-                <button className={classes.addListBt} onClick={onClickAddList}>
-                  Add List
-                </button>
-                <CloseIcon
-                  className={classes.closeIcon}
-                  onClick={onClickClose}
-                />
-              </div>
-            </Card>
+              <Card ref={addListEl} className={classes.addList}>
+                <div className={classes.addBtText}>
+                  <input
+                    className={classes.addListInput}
+                    placeholder="Input List title ..."
+                    onChange={onChangeList}
+                    value={newList}
+                    maxLength={15}
+                  />
+                  <button
+                    className={classes.addListBt}
+                    onClick={onClickAddList}
+                  >
+                    Add List
+                  </button>
+                  <CloseIcon
+                    className={classes.closeIcon}
+                    onClick={onClickClose}
+                  />
+                </div>
+              </Card>
+            </div>
           </div>
-        </div>
+        </DragDropContext>
       </div>
     </>
   );
