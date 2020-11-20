@@ -454,6 +454,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
                 <ListCard
                   key={i}
                   list={v.text}
+                  cardId={v.id}
                   index={i}
                   listIndex={index}
                   boardId={boardId}

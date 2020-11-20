@@ -126,12 +126,19 @@ const useStyles = makeStyles({
 
 interface Props {
   list: string;
+  cardId: number;
   index: number;
   listIndex: number;
   boardId: number;
 }
 
-const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
+const ListCard: React.FC<Props> = ({
+  list,
+  cardId,
+  index,
+  listIndex,
+  boardId,
+}) => {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -194,7 +201,7 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
   };
 
   return (
-    <Draggable draggableId={String(index)} index={index}>
+    <Draggable draggableId={String(cardId)} index={index}>
       {(provided) => (
         <div
           {...provided.draggableProps}
