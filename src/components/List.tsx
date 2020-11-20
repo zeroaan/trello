@@ -236,6 +236,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
   const listAcEl = useRef<HTMLDivElement>(null);
   const listAcCpEl = useRef<HTMLDivElement>(null);
   const listAcDlEl = useRef<HTMLDivElement>(null);
+  const test = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTextTitle(title);
@@ -320,10 +321,13 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
     onClickListAcClose();
     dispatch(deleteList(index, boardId));
   };
+  const onDragOverCard = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
   return (
     <>
-      <Card className={classes.list}>
+      <Card className={classes.list} onDragOver={onDragOverCard}>
         <CardHeader
           className={classes.listName}
           title={title}
@@ -436,7 +440,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId }) => {
             </div>
           </Paper>
         </div>
-        <CardContent className={classes.cardContent}>
+        <CardContent ref={test} className={classes.cardContent}>
           {list.map((v, i) => (
             <ListCard
               key={i}

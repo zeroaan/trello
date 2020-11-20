@@ -191,17 +191,6 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
     displayNone(editBlack);
     setEditList(list);
   };
-  const onDragStartCard = () => {
-    displayNone(editEl);
-    if (paperEl.current) {
-      paperEl.current.classList.add("dragging");
-    }
-  };
-  const onDragEndCard = () => {
-    if (paperEl.current) {
-      paperEl.current.classList.remove("dragging");
-    }
-  };
 
   return (
     <div style={{ position: "relative" }}>
@@ -210,9 +199,6 @@ const ListCard: React.FC<Props> = ({ list, index, listIndex, boardId }) => {
         className={classes.list}
         onMouseOver={() => displayBlock(editEl)}
         onMouseOut={() => displayNone(editEl)}
-        draggable="true"
-        onDragStart={onDragStartCard}
-        onDragEnd={onDragEndCard}
       >
         <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>{list}</p>
         <CreateIcon
