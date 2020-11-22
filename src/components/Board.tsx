@@ -385,13 +385,17 @@ const Board = () => {
             {lists === undefined ? null : (
               <>
                 {lists.map(
-                  (v: { title: string; cards: CardType }, i: number) => (
+                  (
+                    v: { id: string; title: string; cards: CardType },
+                    i: number
+                  ) => (
                     <List
                       key={i}
                       title={v.title}
                       list={v.cards}
                       index={i}
                       boardId={boardId}
+                      listId={v.id}
                     />
                   )
                 )}

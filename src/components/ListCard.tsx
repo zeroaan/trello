@@ -126,7 +126,7 @@ const useStyles = makeStyles({
 
 interface Props {
   list: string;
-  cardId: number;
+  cardId: string;
   index: number;
   listIndex: number;
   boardId: number;
@@ -207,44 +207,47 @@ const ListCard: React.FC<Props> = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          style={{ position: "relative" }}
         >
-          <Paper
-            ref={paperEl}
-            className={classes.list}
-            onMouseOver={() => displayBlock(editEl)}
-            onMouseOut={() => displayNone(editEl)}
-          >
-            <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>{list}</p>
-            <CreateIcon
-              ref={editEl}
-              className={classes.editIcon}
-              onClick={onClickEditList}
-            />
-          </Paper>
-          <div
-            ref={editBlack}
-            className={classes.blackBox}
-            onClick={onClickClose}
-          ></div>
-          <div ref={editListEl} className={classes.editListform}>
-            <div style={{ height: "82px" }}></div>
-            <form onSubmit={onSubmitForm}>
-              <textarea
-                ref={textareaEl}
-                className={classes.editListInput}
-                placeholder="Input card ..."
-                value={editList}
-                onChange={onChangeEditList}
+          <div style={{ position: "relative" }}>
+            <Paper
+              ref={paperEl}
+              className={classes.list}
+              onMouseOver={() => displayBlock(editEl)}
+              onMouseOut={() => displayNone(editEl)}
+            >
+              <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>
+                {list}
+              </p>
+              <CreateIcon
+                ref={editEl}
+                className={classes.editIcon}
+                onClick={onClickEditList}
               />
-            </form>
-            <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
-            <button className={classes.editListBt} onClick={onClickSave}>
-              Save
-            </button>
-            <button className={classes.deleteListBt} onClick={onClickDelete}>
-              Delete
-            </button>
+            </Paper>
+            <div
+              ref={editBlack}
+              className={classes.blackBox}
+              onClick={onClickClose}
+            ></div>
+            <div ref={editListEl} className={classes.editListform}>
+              <div style={{ height: "82px" }}></div>
+              <form onSubmit={onSubmitForm}>
+                <textarea
+                  ref={textareaEl}
+                  className={classes.editListInput}
+                  placeholder="Input card ..."
+                  value={editList}
+                  onChange={onChangeEditList}
+                />
+              </form>
+              <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
+              <button className={classes.editListBt} onClick={onClickSave}>
+                Save
+              </button>
+              <button className={classes.deleteListBt} onClick={onClickDelete}>
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
