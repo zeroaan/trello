@@ -9,6 +9,7 @@ import {
   starBoard,
   deleteBoard,
   addList,
+  sortList,
 } from "store/actions/trello";
 import { RootState } from "store/reducers";
 import { BoardState, ListType, CardType } from "store/reducers/trello";
@@ -309,7 +310,23 @@ const Board = () => {
     setNewList("");
   };
 
-  const onDragEnd = () => {};
+  const onDragEnd = (result: any) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+    dispatch(
+      sortList(
+        boardId,
+        source.droppableId,
+        destination.droppableId,
+        source.index,
+        destination.index,
+        draggableId
+      )
+    );
+  };
 
   return (
     <>

@@ -7,6 +7,7 @@ import {
   ADD_LIST,
   COPY_LIST,
   DELETE_LIST,
+  SORT_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
@@ -54,6 +55,16 @@ export interface DeleteListAction {
   type: typeof DELETE_LIST;
   index: number;
   boardId: number;
+}
+
+export interface SortListAction {
+  type: typeof SORT_LIST;
+  boardId: number;
+  droppableIdStart: string;
+  droppableIdEnd: string;
+  droppableIndexStart: number;
+  droppableIndexEnd: number;
+  draggableId: string;
 }
 
 export interface AddCardAction {
@@ -139,6 +150,25 @@ export const deleteList = (index: number, boardId: number) => {
     type: DELETE_LIST,
     index,
     boardId,
+  };
+};
+
+export const sortList = (
+  boardId: number,
+  droppableIdStart: string,
+  droppableIdEnd: string,
+  droppableIndexStart: number,
+  droppableIndexEnd: number,
+  draggableId: string
+) => {
+  return {
+    type: SORT_LIST,
+    boardId,
+    droppableIdStart,
+    droppableIdEnd,
+    droppableIndexStart,
+    droppableIndexEnd,
+    draggableId,
   };
 };
 

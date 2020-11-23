@@ -11,12 +11,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
+  cardMarginBottom: {
+    marginBottom: "8px",
+  },
   list: {
     minHeight: "20px",
     position: "relative",
     display: "flex",
     justifyContent: "space-between",
-    marginBottom: "8px",
     padding: "12px",
     cursor: "pointer",
     "&:hover": {
@@ -201,14 +203,19 @@ const ListCard: React.FC<Props> = ({
   };
 
   return (
-    <Draggable draggableId={String(cardId)} index={index}>
-      {(provided) => (
-        <div
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
-          <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }}>
+      <Draggable
+        key={String(cardId)}
+        draggableId={String(cardId)}
+        index={index}
+      >
+        {(provided) => (
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            className={classes.cardMarginBottom}
+          >
             <Paper
               ref={paperEl}
               className={classes.list}
@@ -224,34 +231,34 @@ const ListCard: React.FC<Props> = ({
                 onClick={onClickEditList}
               />
             </Paper>
-            <div
-              ref={editBlack}
-              className={classes.blackBox}
-              onClick={onClickClose}
-            ></div>
-            <div ref={editListEl} className={classes.editListform}>
-              <div style={{ height: "82px" }}></div>
-              <form onSubmit={onSubmitForm}>
-                <textarea
-                  ref={textareaEl}
-                  className={classes.editListInput}
-                  placeholder="Input card ..."
-                  value={editList}
-                  onChange={onChangeEditList}
-                />
-              </form>
-              <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
-              <button className={classes.editListBt} onClick={onClickSave}>
-                Save
-              </button>
-              <button className={classes.deleteListBt} onClick={onClickDelete}>
-                Delete
-              </button>
-            </div>
           </div>
-        </div>
-      )}
-    </Draggable>
+        )}
+      </Draggable>
+      <div
+        ref={editBlack}
+        className={classes.blackBox}
+        onClick={onClickClose}
+      ></div>
+      <div ref={editListEl} className={classes.editListform}>
+        <div style={{ height: "82px" }}></div>
+        <form onSubmit={onSubmitForm}>
+          <textarea
+            ref={textareaEl}
+            className={classes.editListInput}
+            placeholder="Input card ..."
+            value={editList}
+            onChange={onChangeEditList}
+          />
+        </form>
+        <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
+        <button className={classes.editListBt} onClick={onClickSave}>
+          Save
+        </button>
+        <button className={classes.deleteListBt} onClick={onClickDelete}>
+          Delete
+        </button>
+      </div>
+    </div>
   );
 };
 

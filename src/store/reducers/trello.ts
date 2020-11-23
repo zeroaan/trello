@@ -7,6 +7,7 @@ import {
   ADD_LIST,
   COPY_LIST,
   DELETE_LIST,
+  SORT_LIST,
   ADD_CARD,
   EDIT_CARD,
   DELETE_CARD,
@@ -20,6 +21,7 @@ import {
   AddListAction,
   CopyListAction,
   DeleteListAction,
+  SortListAction,
   AddCardAction,
   EditCardAction,
   DeleteCardAction,
@@ -135,6 +137,7 @@ type ListReducerActions =
   | AddListAction
   | CopyListAction
   | DeleteListAction
+  | SortListAction
   | AddCardAction
   | EditCardAction
   | DeleteCardAction;
@@ -264,6 +267,26 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists.splice(action.index, 1);
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard] };
+    }
+    case SORT_LIST: {
+      const newBoard: BoardType[] = [...state.boards];
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          if (action.droppableIdStart === action.droppableIdEnd) {
+            const list = state.boards[i].lists.find(
+              (list) => action.droppableIdStart === list.id
+            );
+            if (list) {
+              const card = list.cards.splice(action.droppableIndexStart, 1);
+              list.cards.splice(action.droppableIndexEnd, 0, ...card);
+            }
+          }
           break;
         }
         i = i + 1;
