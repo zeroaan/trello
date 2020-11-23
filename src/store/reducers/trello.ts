@@ -247,19 +247,32 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
     }
     case COPY_LIST: {
       const newBoard: BoardType[] = [...state.boards];
+      let newCardId = state.cardId;
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
+          const newCard = [...newBoard[i].lists[action.index].cards];
+          newCardId += newCard.length;
+          let j = 0;
+          while (j < newCard.length) {
+            newCard[j] = { ...newCard[j], id: `card-${state.cardId + j}` };
+            j = j + 1;
+          }
           newBoard[i].lists.splice(action.index + 1, 0, {
             id: `list-${state.listId}`,
             title: action.title,
-            cards: [...newBoard[i].lists[action.index].cards],
+            cards: [...newCard],
           });
           break;
         }
         i = i + 1;
       }
-      return { ...state, boards: [...newBoard], listId: state.listId + 1 };
+      return {
+        ...state,
+        boards: [...newBoard],
+        listId: state.listId + 1,
+        cardId: newCardId,
+      };
     }
     case DELETE_LIST: {
       const newBoard: BoardType[] = [...state.boards];
@@ -279,7 +292,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           if (action.droppableIdStart === action.droppableIdEnd) {
-            const list = state.boards[i].lists.find(
+            const list = newBoard[i].lists.find(
               (list) => action.droppableIdStart === list.id
             );
             if (list) {
@@ -288,10 +301,10 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
             }
           }
           if (action.droppableIdStart !== action.droppableIdEnd) {
-            const listStart = state.boards[i].lists.find(
+            const listStart = newBoard[i].lists.find(
               (list) => action.droppableIdStart === list.id
             );
-            const listEnd = state.boards[i].lists.find(
+            const listEnd = newBoard[i].lists.find(
               (list) => action.droppableIdEnd === list.id
             );
             if (listStart && listEnd) {

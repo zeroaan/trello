@@ -116,6 +116,7 @@ const useStyles = makeStyles({
   cardContent: {
     padding: "0 12px",
     overflow: "auto",
+    minHeight: "5px",
     maxHeight: "375px",
     "&::-webkit-scrollbar": {
       width: "8px",
