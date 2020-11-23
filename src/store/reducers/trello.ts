@@ -32,7 +32,6 @@ export type CardType = {
 export type ListType = {
   id: string;
   title: string;
-  newCardId: number;
   cards: CardType;
 }[];
 export type BoardType = {
@@ -43,16 +42,17 @@ export type BoardType = {
 };
 
 export interface BoardState {
-  newBoardId: number;
+  boardId: number;
+  listId: number;
+  cardId: number;
   starCount: number;
   boards: BoardType[];
 }
 
-let listID = 6;
-let cardID = 18;
-
 const initialState: BoardState = {
-  newBoardId: 1,
+  boardId: 2,
+  listId: 6,
+  cardId: 18,
   starCount: 1,
   boards: [
     {
@@ -63,7 +63,6 @@ const initialState: BoardState = {
         {
           id: `list-${0}`,
           title: "To do",
-          newCardId: 4,
           cards: [
             { id: `card-${0}`, text: "doing" },
             { id: `card-${1}`, text: "test a game" },
@@ -74,7 +73,6 @@ const initialState: BoardState = {
         {
           id: `list-${1}`,
           title: "Doing",
-          newCardId: 2,
           cards: [
             { id: `card-${4}`, text: "go to school" },
             { id: `card-${5}`, text: "watch" },
@@ -83,7 +81,6 @@ const initialState: BoardState = {
         {
           id: `list-${2}`,
           title: "Complete",
-          newCardId: 3,
           cards: [
             { id: `card-${6}`, text: "pratice" },
             { id: `card-${7}`, text: "finish" },
@@ -100,7 +97,6 @@ const initialState: BoardState = {
         {
           id: `list-${3}`,
           title: "To do",
-          newCardId: 3,
           cards: [
             { id: `card-${9}`, text: "wow" },
             { id: `card-${10}`, text: "my second board" },
@@ -110,7 +106,6 @@ const initialState: BoardState = {
         {
           id: `list-${4}`,
           title: "Doing",
-          newCardId: 4,
           cards: [
             { id: `card-${12}`, text: "buy coffee" },
             { id: `card-${13}`, text: "movie" },
@@ -121,7 +116,6 @@ const initialState: BoardState = {
         {
           id: `list-${5}`,
           title: "Complete",
-          newCardId: 2,
           cards: [
             { id: `card-${16}`, text: "go to the gym" },
             { id: `card-${17}`, text: "computer" },
@@ -162,31 +156,29 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       const newBoard: BoardType[] = [
         ...state.boards,
         {
-          id: state.newBoardId + 1,
+          id: state.boardId,
           star: false,
           boardName: action.newBoardName,
           lists: [
-            { id: `list-${listID}`, title: "To do", newCardId: 0, cards: [] },
+            { id: `list-${state.listId}`, title: "To do", cards: [] },
             {
-              id: `list-${listID + 1}`,
+              id: `list-${state.listId + 1}`,
               title: "Doing",
-              newCardId: 0,
               cards: [],
             },
             {
-              id: `list-${listID + 2}`,
+              id: `list-${state.listId + 2}`,
               title: "Complete",
-              newCardId: 0,
               cards: [],
             },
           ],
         },
       ];
-      listID += 3;
       return {
         ...state,
         boards: [...newBoard],
-        newBoardId: state.newBoardId + 1,
+        boardId: state.boardId + 1,
+        listId: state.listId + 3,
       };
     }
     case STAR_BOARD: {
@@ -239,9 +231,8 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
           newBoard[i].lists = [
             ...newBoard[i].lists,
             {
-              id: `list-${listID}`,
+              id: `list-${state.listId}`,
               title: action.title,
-              newCardId: 0,
               cards: [],
             },
           ];
@@ -249,8 +240,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         }
         i = i + 1;
       }
-      listID += 1;
-      return { ...state, boards: [...newBoard] };
+      return { ...state, boards: [...newBoard], listId: state.listId + 1 };
     }
     case COPY_LIST: {
       const newBoard: BoardType[] = [...state.boards];
@@ -258,17 +248,15 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           newBoard[i].lists.splice(action.index + 1, 0, {
-            id: `list-${listID}`,
+            id: `list-${state.listId}`,
             title: action.title,
-            newCardId: newBoard[i].lists[action.index].newCardId,
             cards: [...newBoard[i].lists[action.index].cards],
           });
           break;
         }
         i = i + 1;
       }
-      listID += 1;
-      return { ...state, boards: [...newBoard] };
+      return { ...state, boards: [...newBoard], listId: state.listId + 1 };
     }
     case DELETE_LIST: {
       const newBoard: BoardType[] = [...state.boards];
@@ -290,17 +278,15 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
           newBoard[i].lists[action.index].cards = [
             ...newBoard[i].lists[action.index].cards,
             {
-              id: `card-${cardID}`,
+              id: `card-${state.cardId}`,
               text: action.card,
             },
           ];
-          newBoard[i].lists[action.index].newCardId += 1;
           break;
         }
         i = i + 1;
       }
-      cardID += 1;
-      return { ...state, boards: [...newBoard] };
+      return { ...state, boards: [...newBoard], cardId: state.cardId + 1 };
     }
     case EDIT_CARD: {
       const newBoard: BoardType[] = [...state.boards];

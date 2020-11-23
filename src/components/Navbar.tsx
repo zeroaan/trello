@@ -147,7 +147,7 @@ const Navbar = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
-  const { newBoardId } = useSelector<RootState, BoardState>(
+  const { boardId } = useSelector<RootState, BoardState>(
     (state: RootState) => state.trello
   );
 
@@ -168,7 +168,7 @@ const Navbar = () => {
     if (newBoard !== "") {
       onClickClose();
       dispatch(addBoard(newBoard));
-      history.push(`/board/${newBoardId + 1}`);
+      history.push(`/board/${boardId}`);
     }
   };
   const onClickClose = () => {
