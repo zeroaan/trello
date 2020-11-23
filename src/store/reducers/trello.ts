@@ -287,6 +287,21 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
               list.cards.splice(action.droppableIndexEnd, 0, ...card);
             }
           }
+          if (action.droppableIdStart !== action.droppableIdEnd) {
+            const listStart = state.boards[i].lists.find(
+              (list) => action.droppableIdStart === list.id
+            );
+            const listEnd = state.boards[i].lists.find(
+              (list) => action.droppableIdEnd === list.id
+            );
+            if (listStart && listEnd) {
+              const card = listStart.cards.splice(
+                action.droppableIndexStart,
+                1
+              );
+              listEnd.cards.splice(action.droppableIndexEnd, 0, ...card);
+            }
+          }
           break;
         }
         i = i + 1;
