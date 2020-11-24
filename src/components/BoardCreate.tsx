@@ -117,6 +117,7 @@ const BoardCreate: React.FC<Props> = ({ setCreateBoard }) => {
             onChange={onChangeBoard}
             value={newBoard}
             maxLength={15}
+            autoFocus
           />
           <button className={classes.addBoardBt} onClick={onClickAddBoard}>
             Create a Board
