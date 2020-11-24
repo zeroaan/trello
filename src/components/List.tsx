@@ -3,19 +3,13 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 
-import {
-  changeListTitle,
-  addCard,
-  copyList,
-  deleteList,
-} from "store/actions/trello";
+import { changeListTitle, addCard } from "store/actions/trello";
 import { CardType } from "store/reducers/trello";
 
 import ListCard from "components/Card";
+import ListAction from "components/ListAction";
 
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
@@ -130,29 +124,6 @@ const useStyles = makeStyles({
       borderRadius: "10px",
     },
   },
-  listAc: {
-    zIndex: 100,
-    position: "absolute",
-    top: "13px",
-    right: "-160px",
-    width: "200px",
-    height: "165px",
-    border: "1px solid rgb(218,219,226)",
-    display: "none",
-  },
-  listAcTitle: {
-    fontFamily: `"Jua", sans-serif`,
-    position: "relative",
-    top: "8px",
-    textAlign: "center",
-  },
-  listAcClose: {
-    position: "absolute",
-    top: "12px",
-    right: "9px",
-    fontSize: "17px",
-    cursor: "pointer",
-  },
   listAcBack: {
     position: "absolute",
     top: "12px",
@@ -160,61 +131,6 @@ const useStyles = makeStyles({
     fontSize: "15px",
     cursor: "pointer",
     zIndex: 1,
-  },
-  listAcHr: {
-    position: "relative",
-    top: "10px",
-    width: "170px",
-    margin: "auto",
-    border: "1px solid rgb(218,219,226)",
-    backgroundColor: "rgb(218,219,226)",
-  },
-  listAcdivBt: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginTop: "15px",
-  },
-  listAcBt: {
-    width: "179px",
-  },
-  listAcdiv: {
-    margin: "20px 15px",
-  },
-  listAcaddListInput: {
-    fontSize: "15px",
-    outline: "none",
-    border: "2px solid rgb(0,121,191)",
-    borderRadius: "5px",
-    width: "145px",
-    height: "12px",
-    padding: "10px 10px",
-    margin: "8px 0px",
-    resize: "none",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  },
-  listAcaddListBt: {
-    borderRadius: "5px",
-    outline: "none",
-    border: "none",
-    backgroundColor: "rgb(90,172,68)",
-    color: "white",
-    padding: "6px 8px",
-    fontSize: "15px",
-    cursor: "pointer",
-  },
-  listAcDeleteListBt: {
-    margin: "0 47px",
-    borderRadius: "5px",
-    outline: "none",
-    border: "none",
-    backgroundColor: "rgb(250,60,84)",
-    color: "white",
-    padding: "6px 16px",
-    fontSize: "15px",
-    cursor: "pointer",
   },
 });
 
@@ -231,15 +147,13 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
 
   const classes = useStyles();
 
+  const [actionOpen, setActionOpen] = useState(false);
+
   const [textTitle, setTextTitle] = useState(title);
   const [card, setCard] = useState("");
-  const [newList, setNewList] = useState("");
   const cardAdd = useRef<HTMLButtonElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
   const cardInput = useRef<HTMLInputElement>(null);
-  const listAcEl = useRef<HTMLDivElement>(null);
-  const listAcCpEl = useRef<HTMLDivElement>(null);
-  const listAcDlEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTextTitle(title);
@@ -291,39 +205,6 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
     displayBlock(cardAdd);
     displayNone(cardInput);
   };
-  const onClickListAcClose = () => {
-    displayNone(listAcEl);
-    displayNone(listAcCpEl);
-    displayNone(listAcDlEl);
-    setNewList("");
-  };
-  const onClickListAcAddCard = () => {
-    onClickListAcClose();
-    onClickAddBt();
-  };
-  const onClickListAcCopy = () => {
-    displayNone(listAcEl);
-    displayBlock(listAcCpEl);
-  };
-  const onClickListAcDelete = () => {
-    displayNone(listAcEl);
-    displayBlock(listAcDlEl);
-  };
-  const onChangeList = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setNewList(value);
-  };
-  const onClickAddList = () => {
-    if (newList !== "") {
-      onClickListAcClose();
-      dispatch(copyList(newList, index, boardId));
-      setNewList("");
-    }
-  };
-  const onClickDeleteList = () => {
-    onClickListAcClose();
-    dispatch(deleteList(index, boardId));
-  };
   const onDragOverCard = (e: React.DragEvent) => {
     e.preventDefault();
   };
@@ -347,102 +228,16 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
             maxLength={15}
           />
         </form>
-        <button
-          className={classes.menuBt}
-          onClick={() => displayBlock(listAcEl)}
-        >
+        <button className={classes.menuBt} onClick={() => setActionOpen(true)}>
           ⋯
         </button>
-        <div onMouseLeave={onClickListAcClose}>
-          <Paper ref={listAcEl} className={classes.listAc}>
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              List Actions
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
-            />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdivBt}>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcAddCard}
-                disableRipple
-              >
-                Add Card
-              </Button>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcCopy}
-                disableRipple
-              >
-                Copy List
-              </Button>
-              <Button
-                className={classes.listAcBt}
-                onClick={onClickListAcDelete}
-                disableRipple
-              >
-                Delete This List
-              </Button>
-            </div>
-          </Paper>
-          <Paper
-            ref={listAcCpEl}
-            className={classes.listAc}
-            onMouseLeave={onClickListAcClose}
-          >
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              Copy List
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
-            />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdiv}>
-              <p>Name</p>
-              <input
-                className={classes.listAcaddListInput}
-                placeholder="Input List title ..."
-                onChange={onChangeList}
-                value={newList}
-                maxLength={15}
-              />
-              <button
-                className={classes.listAcaddListBt}
-                onClick={onClickAddList}
-              >
-                Create
-              </button>
-            </div>
-          </Paper>
-          <Paper
-            ref={listAcDlEl}
-            className={classes.listAc}
-            onMouseLeave={onClickListAcClose}
-          >
-            <Typography className={classes.listAcTitle} variant="subtitle1">
-              Delete List
-            </Typography>
-            <CloseIcon
-              className={classes.listAcClose}
-              onClick={onClickListAcClose}
-            />
-            <hr className={classes.listAcHr} />
-            <div className={classes.listAcdiv}>
-              <p style={{ margin: "35px 0 20px 0" }}>
-                삭제 후 되돌릴 수 없습니다.
-              </p>
-              <button
-                className={classes.listAcDeleteListBt}
-                onClick={onClickDeleteList}
-              >
-                Delete
-              </button>
-            </div>
-          </Paper>
-        </div>
+        {actionOpen ? (
+          <ListAction
+            setActionOpen={setActionOpen}
+            index={index}
+            boardId={boardId}
+          />
+        ) : null}
         <Droppable droppableId={String(listId)}>
           {(provided) => (
             <CardContent
