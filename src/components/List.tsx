@@ -1,17 +1,17 @@
 import React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 
-import { changeListTitle, addCard } from "store/actions/trello";
+import { addCard } from "store/actions/trello";
 import { CardType } from "store/reducers/trello";
 
 import ListCard from "components/Card";
+import ListTitle from "components/ListTitle";
 import ListAction from "components/ListAction";
 
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import CloseIcon from "@material-ui/icons/Close";
@@ -27,18 +27,6 @@ const useStyles = makeStyles({
     margin: "0 0 0 16px",
     overflow: "visible",
   },
-  listName: {
-    margin: "13px 10px",
-    fontSize: "18px",
-    width: "210px",
-    height: "1px",
-    cursor: "pointer",
-  },
-  listNameForm: {
-    position: "absolute",
-    top: "13px",
-    left: "12px",
-  },
   menuBt: {
     fontSize: "18px",
     position: "absolute",
@@ -50,17 +38,6 @@ const useStyles = makeStyles({
     cursor: "pointer",
     borderRadius: "50px",
     backgroundColor: "rgb(235,236,240)",
-  },
-  listNameInput: {
-    paddingTop: "2px",
-    paddingLeft: "12px",
-    fontSize: "18px",
-    outline: "none",
-    border: "2px solid rgb(0,121,191)",
-    borderRadius: "5px",
-    width: "230px",
-    height: "25px",
-    display: "none",
   },
   addBt: {
     width: "100%",
@@ -149,15 +126,9 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
 
   const [actionOpen, setActionOpen] = useState(false);
 
-  const [textTitle, setTextTitle] = useState(title);
   const [card, setCard] = useState("");
   const cardAdd = useRef<HTMLButtonElement>(null);
-  const textInput = useRef<HTMLInputElement>(null);
   const cardInput = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setTextTitle(title);
-  }, [title]);
 
   const displayBlock = (
     ref: React.RefObject<HTMLButtonElement | HTMLInputElement | HTMLDivElement>
@@ -171,20 +142,6 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
   ) => {
     if (ref.current) {
       ref.current.style.display = "none";
-    }
-  };
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setTextTitle(value);
-  };
-  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onBlurInput();
-  };
-  const onBlurInput = () => {
-    if (textTitle !== "") {
-      displayNone(textInput);
-      dispatch(changeListTitle(textTitle, index, boardId));
     }
   };
   const onClickAddBt = () => {
@@ -212,22 +169,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
   return (
     <>
       <Card className={classes.list} onDragOver={onDragOverCard}>
-        <CardHeader
-          className={classes.listName}
-          title={title}
-          onClick={() => displayBlock(textInput)}
-          disableTypography
-        />
-        <form className={classes.listNameForm} onSubmit={onSubmitForm}>
-          <input
-            ref={textInput}
-            className={classes.listNameInput}
-            value={textTitle}
-            onChange={onChangeInput}
-            onBlur={onBlurInput}
-            maxLength={15}
-          />
-        </form>
+        <ListTitle title={title} index={index} boardId={boardId} />
         <button className={classes.menuBt} onClick={() => setActionOpen(true)}>
           ⋯
         </button>
