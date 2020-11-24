@@ -11,7 +11,7 @@ import {
 } from "store/actions/trello";
 import { CardType } from "store/reducers/trello";
 
-import ListCard from "components/ListCard";
+import ListCard from "components/Card";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
