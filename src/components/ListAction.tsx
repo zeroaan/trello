@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, Dispatch, SetStateAction } from "react";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 
 import { copyList, deleteList } from "store/actions/trello";
 
@@ -8,89 +9,89 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
-  listAc: {
-    zIndex: 100,
-    position: "absolute",
-    top: "13px",
-    right: "-160px",
-    width: "200px",
-    height: "165px",
-    border: "1px solid rgb(218,219,226)",
-  },
-  listAcTitle: {
-    fontFamily: `"Jua", sans-serif`,
-    position: "relative",
-    top: "8px",
-    textAlign: "center",
-  },
-  listAcClose: {
-    position: "absolute",
-    top: "12px",
-    right: "9px",
-    fontSize: "17px",
-    cursor: "pointer",
-  },
-  listAcHr: {
-    position: "relative",
-    top: "10px",
-    width: "170px",
-    margin: "auto",
-    border: "1px solid rgb(218,219,226)",
-    backgroundColor: "rgb(218,219,226)",
-  },
-  listAcdivBt: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginTop: "15px",
-  },
-  listAcBt: {
-    width: "179px",
-  },
-  listAcdiv: {
-    margin: "20px 15px",
-  },
-  listAcaddListInput: {
-    fontSize: "15px",
-    outline: "none",
-    border: "2px solid rgb(0,121,191)",
-    borderRadius: "5px",
-    width: "145px",
-    height: "12px",
-    padding: "10px 10px",
-    margin: "8px 0px",
-    resize: "none",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  },
-  listAcaddListBt: {
-    position: "relative",
-    left: "48px",
-    borderRadius: "5px",
-    outline: "none",
-    border: "none",
-    backgroundColor: "rgb(90,172,68)",
-    color: "white",
-    padding: "6px 13px",
-    fontSize: "15px",
-    cursor: "pointer",
-  },
-  listAcDeleteListBt: {
-    margin: "0 47px",
-    borderRadius: "5px",
-    outline: "none",
-    border: "none",
-    backgroundColor: "rgb(250,60,84)",
-    color: "white",
-    padding: "6px 16px",
-    fontSize: "15px",
-    cursor: "pointer",
-  },
-});
+const DivActionBt = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+`;
+const ButtonStyled = styled(Button)`
+  width: 179px;
+`;
+const DivAction = styled.div`
+  margin: 20px 15px;
+`;
+const InputCopy = styled.input`
+  font-size: 15px;
+  outline: none;
+  border: 2px solid rgb(0, 121, 191);
+  border-radius: 5px;
+  width: 145px;
+  height: 12px;
+  padding: 10px 10px;
+  margin: 8px 0px;
+  resize: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const ButtonCopy = styled.button`
+  position: relative;
+  left: 48px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: rgb(90, 172, 68);
+  color: white;
+  padding: 6px 13px;
+  font-size: 15px;
+  cursor: pointer;
+`;
+const PDelete = styled.p`
+  margin: 35px 0 20px 0;
+`;
+const ButtonDelete = styled.button`
+  margin: 0px 47px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: rgb(250, 60, 84);
+  color: white;
+  padding: 6px 16px;
+  font-size: 15px;
+  cursor: pointer;
+`;
+const PaperStyled = styled(Paper)`
+  z-index: 100;
+  position: absolute;
+  top: 13px;
+  right: -160px;
+  width: 200px;
+  height: 165px;
+  border: 1px solid rgb(218, 219, 226);
+`;
+const TypographyStyled = styled(Typography)`
+  font-family: "Jua", sans-serif;
+  position: relative;
+  top: 8px;
+  text-align: center;
+`;
+const CloseIconStyled = styled(CloseIcon)`
+  position: absolute;
+  top: 12px;
+  right: 9px;
+  font-size: 17px;
+  cursor: pointer;
+`;
+const HrStyled = styled.hr`
+  position: relative;
+  top: 10px;
+  width: 170px;
+  margin: auto;
+  border: 1px solid rgb(218, 219, 226);
+  background-color: rgb(218, 219, 226);
+`;
 
 interface Props {
   setActionOpen: Dispatch<SetStateAction<boolean>>;
@@ -99,8 +100,6 @@ interface Props {
 }
 
 const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
-  const classes = useStyles();
-
   const dispatch = useDispatch();
 
   const [newList, setNewList] = useState("");
@@ -137,80 +136,57 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
 
   const ActionHome = () => {
     return (
-      <div className={classes.listAcdivBt}>
-        <Button
-          className={classes.listAcBt}
-          onClick={onClickListAcAddCard}
-          disableRipple
-        >
+      <DivActionBt>
+        <ButtonStyled onClick={onClickListAcAddCard} disableRipple>
           Add Card
-        </Button>
-        <Button
-          className={classes.listAcBt}
-          onClick={onClickListAcCopy}
-          disableRipple
-        >
+        </ButtonStyled>
+        <ButtonStyled onClick={onClickListAcCopy} disableRipple>
           Copy List
-        </Button>
-        <Button
-          className={classes.listAcBt}
-          onClick={onClickListAcDelete}
-          disableRipple
-        >
+        </ButtonStyled>
+        <ButtonStyled onClick={onClickListAcDelete} disableRipple>
           Delete This List
-        </Button>
-      </div>
+        </ButtonStyled>
+      </DivActionBt>
     );
   };
   const ListCopy = () => {
     return (
-      <div className={classes.listAcdiv}>
+      <DivAction>
         <p>Name</p>
-        <input
-          className={classes.listAcaddListInput}
+        <InputCopy
           placeholder="Input List title ..."
-          onChange={onChangeList}
           value={newList}
+          onChange={onChangeList}
           maxLength={15}
           autoFocus
         />
-        <button className={classes.listAcaddListBt} onClick={onClickAddList}>
-          Create
-        </button>
-      </div>
+        <ButtonCopy onClick={onClickAddList}>Create</ButtonCopy>
+      </DivAction>
     );
   };
   const ListDelete = () => {
     return (
-      <div className={classes.listAcdiv}>
-        <p style={{ margin: "35px 0 20px 0" }}>삭제 후 되돌릴 수 없습니다.</p>
-        <button
-          className={classes.listAcDeleteListBt}
-          onClick={onClickDeleteList}
-        >
-          Delete
-        </button>
-      </div>
+      <DivAction>
+        <PDelete>삭제 후 되돌릴 수 없습니다.</PDelete>
+        <ButtonDelete onClick={onClickDeleteList}>Delete</ButtonDelete>
+      </DivAction>
     );
   };
 
+  const ActionTitle = copyAction
+    ? "Copy List"
+    : deleteAction
+    ? "Delete List"
+    : "List Actions";
+
   return (
     <>
-      <Paper className={classes.listAc} onMouseLeave={onClickListAcClose}>
-        <Typography className={classes.listAcTitle} variant="subtitle1">
-          {copyAction
-            ? "Copy List"
-            : deleteAction
-            ? "Delete List"
-            : "List Actions"}
-        </Typography>
-        <CloseIcon
-          className={classes.listAcClose}
-          onClick={onClickListAcClose}
-        />
-        <hr className={classes.listAcHr} />
+      <PaperStyled onMouseLeave={onClickListAcClose}>
+        <TypographyStyled variant="subtitle1">{ActionTitle}</TypographyStyled>
+        <CloseIconStyled onClick={onClickListAcClose} />
+        <HrStyled />
         {copyAction ? ListCopy() : deleteAction ? ListDelete() : ActionHome()}
-      </Paper>
+      </PaperStyled>
     </>
   );
 };
