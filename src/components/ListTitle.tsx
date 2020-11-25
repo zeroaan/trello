@@ -8,7 +8,7 @@ import { changeListTitle } from "store/actions/trello";
 import CardHeader from "@material-ui/core/CardHeader";
 
 const CardHeaderTitle = styled(CardHeader)`
-  margin: 13px 10px;
+  margin: 13px 10px 0px 10px;
   font-size: 18px;
   width: 210px;
   height: 1px;

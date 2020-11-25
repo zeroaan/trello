@@ -37,6 +37,7 @@ const useStyles = makeStyles({
     backgroundColor: "rgb(235,236,240)",
   },
   cardContent: {
+    marginTop: "10px",
     padding: "0 12px",
     overflow: "auto",
     minHeight: "5px",
