@@ -16,7 +16,7 @@ const ButtonStar = styled.button`
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
-  &:hover: {
+  &:hover {
     background-color: rgba(171, 177, 180, 0.9);
   }
 `;

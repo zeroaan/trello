@@ -4,16 +4,16 @@ import { useRouteMatch, useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import { changeBoardName, deleteBoard, sortList } from "store/actions/trello";
+import { deleteBoard, sortList } from "store/actions/trello";
 import { RootState } from "store/reducers";
 import { BoardState, ListType, CardType } from "store/reducers/trello";
 
 import List from "components/List";
 import Navbar from "components/Navbar";
 import BoardStarButton from "components/BoardStarButton";
+import BoardTitle from "components/BoardTitle";
 import ListCardAdd from "components/ListCardAdd";
 
-import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -30,37 +30,6 @@ const useStyles = makeStyles({
   boardName: {
     display: "flex",
     marginBottom: "12px",
-  },
-  boardNameText: {
-    position: "absolute",
-    top: 0,
-    left: "60px",
-    padding: "4px 12px 2px 12px",
-    flex: "0 1 auto",
-    color: "white",
-    borderRadius: "5px",
-    fontFamily: `"Jua", sans-serif`,
-    cursor: "pointer",
-    fontSize: "18px",
-    whiteSpace: "pre",
-    "&:hover": {
-      backgroundColor: "rgba(154,160,163, 0.9)",
-    },
-  },
-  boardNameForm: {
-    position: "absolute",
-    top: 0,
-    left: "60px",
-  },
-  boardNameInput: {
-    padding: "0 12px",
-    outline: "none",
-    border: "none",
-    borderRadius: "5px",
-    height: "34px",
-    fontSize: "18px",
-    whiteSpace: "pre",
-    display: "none",
   },
   deleteBt: {
     position: "absolute",
@@ -167,8 +136,6 @@ const Board = () => {
 
   const [boardName, setBoardName] = useState(firstBoardName);
 
-  const bnEl = useRef<HTMLInputElement>(null);
-  const wtEl = useRef<HTMLInputElement>(null);
   const deleteBoardEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -187,29 +154,6 @@ const Board = () => {
   ) => {
     if (ref.current) {
       ref.current.style.display = "none";
-    }
-  };
-  const onClickText = () => {
-    displayBlock(bnEl);
-    if (bnEl.current && wtEl.current) {
-      bnEl.current.style.width = wtEl.current.scrollWidth - 24 + "px";
-    }
-  };
-  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onBlurInput();
-  };
-  const onBlurInput = () => {
-    if (boardName !== "") {
-      displayNone(bnEl);
-      dispatch(changeBoardName(boardName, boardId));
-    }
-  };
-  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setBoardName(value);
-    if (bnEl.current && wtEl.current) {
-      bnEl.current.style.width = wtEl.current.scrollWidth - 8 + "px";
     }
   };
   const onClickDeleteBoard = () => {
@@ -242,14 +186,10 @@ const Board = () => {
       <div className={classes.screen}>
         <div className={classes.boardName}>
           <BoardStarButton boardStar={boardStar} boardId={boardId} />
-          <Typography
-            ref={wtEl}
-            className={classes.boardNameText}
-            variant="h6"
-            onClick={onClickText}
-          >
-            {boardName}
-          </Typography>
+          <div style={{ width: "100%" }}>
+            <BoardTitle boardName={boardName} boardId={boardId} />
+          </div>
+
           <button
             className={classes.deleteBt}
             onClick={() => displayBlock(deleteBoardEl)}
@@ -276,16 +216,6 @@ const Board = () => {
               </div>
             </Card>
           </div>
-          <form className={classes.boardNameForm} onSubmit={onSubmitForm}>
-            <input
-              ref={bnEl}
-              className={classes.boardNameInput}
-              value={boardName}
-              onChange={onChangeName}
-              onBlur={onBlurInput}
-              maxLength={15}
-            />
-          </form>
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <div style={{ display: "flex" }}>
