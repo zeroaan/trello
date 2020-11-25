@@ -1,20 +1,17 @@
 import React from "react";
-import { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
-import { addCard } from "store/actions/trello";
 import { CardType } from "store/reducers/trello";
 
 import ListCard from "components/Card";
 import ListTitle from "components/ListTitle";
 import ListAction from "components/ListAction";
+import ListCardAdd from "components/ListCardAdd";
 
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -38,51 +35,6 @@ const useStyles = makeStyles({
     cursor: "pointer",
     borderRadius: "50px",
     backgroundColor: "rgb(235,236,240)",
-  },
-  addBt: {
-    width: "100%",
-    textTransform: "none",
-  },
-  addBtText: {
-    display: "none",
-    position: "relative",
-    top: "-8px",
-    left: "-4px",
-  },
-  addCardInput: {
-    boxShadow:
-      "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
-    fontSize: "15px",
-    outline: "none",
-    border: "none",
-    borderRadius: "5px",
-    width: "256px",
-    height: "60px",
-    padding: "10px 10px",
-    marginTop: "12px",
-    resize: "none",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  },
-  addCardBt: {
-    borderRadius: "5px",
-    outline: "none",
-    border: "none",
-    backgroundColor: "rgb(90,172,68)",
-    marginTop: "10px",
-    color: "white",
-    padding: "6px 10px",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-  closeIcon: {
-    position: "relative",
-    top: "7px",
-    left: "8px",
-    cursor: "pointer",
-    color: "rgb(108,120,141)",
-    fontSize: "25px",
   },
   cardContent: {
     padding: "0 12px",
@@ -109,6 +61,13 @@ const useStyles = makeStyles({
     cursor: "pointer",
     zIndex: 1,
   },
+  cardActions: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "278px",
+    margin: "auto",
+  },
 });
 
 interface Props {
@@ -120,55 +79,13 @@ interface Props {
 }
 
 const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
-  const dispatch = useDispatch();
-
   const classes = useStyles();
 
   const [actionOpen, setActionOpen] = useState(false);
 
-  const [card, setCard] = useState("");
-  const cardAdd = useRef<HTMLButtonElement>(null);
-  const cardInput = useRef<HTMLInputElement>(null);
-
-  const displayBlock = (
-    ref: React.RefObject<HTMLButtonElement | HTMLInputElement | HTMLDivElement>
-  ) => {
-    if (ref.current) {
-      ref.current.style.display = "block";
-    }
-  };
-  const displayNone = (
-    ref: React.RefObject<HTMLButtonElement | HTMLInputElement | HTMLDivElement>
-  ) => {
-    if (ref.current) {
-      ref.current.style.display = "none";
-    }
-  };
-  const onClickAddBt = () => {
-    displayBlock(cardInput);
-    displayNone(cardAdd);
-  };
-  const onClickAddCard = () => {
-    if (card !== "") {
-      dispatch(addCard(card, index, boardId));
-      setCard("");
-    }
-  };
-  const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setCard(value);
-  };
-  const onClickClose = () => {
-    displayBlock(cardAdd);
-    displayNone(cardInput);
-  };
-  const onDragOverCard = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
   return (
     <>
-      <Card className={classes.list} onDragOver={onDragOverCard}>
+      <Card className={classes.list}>
         <ListTitle title={title} index={index} boardId={boardId} />
         <button className={classes.menuBt} onClick={() => setActionOpen(true)}>
           ⋯
@@ -201,27 +118,8 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
             </CardContent>
           )}
         </Droppable>
-        <CardActions>
-          <Button
-            ref={cardAdd}
-            className={classes.addBt}
-            onClick={onClickAddBt}
-            disableRipple
-          >
-            + Add a Card
-          </Button>
-          <div ref={cardInput} className={classes.addBtText}>
-            <textarea
-              className={classes.addCardInput}
-              placeholder="Input card ..."
-              onChange={onChangeCard}
-              value={card}
-            />
-            <button className={classes.addCardBt} onClick={onClickAddCard}>
-              Add Card
-            </button>
-            <CloseIcon className={classes.closeIcon} onClick={onClickClose} />
-          </div>
+        <CardActions className={classes.cardActions}>
+          <ListCardAdd index={index} boardId={boardId} />
         </CardActions>
       </Card>
     </>

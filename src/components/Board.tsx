@@ -8,7 +8,6 @@ import {
   changeBoardName,
   starBoard,
   deleteBoard,
-  addList,
   sortList,
 } from "store/actions/trello";
 import { RootState } from "store/reducers";
@@ -16,9 +15,9 @@ import { BoardState, ListType, CardType } from "store/reducers/trello";
 
 import List from "components/List";
 import Navbar from "components/Navbar";
+import ListCardAdd from "components/ListCardAdd";
 
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -99,67 +98,6 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(171,177,180, 0.9)",
     },
   },
-  addBt: {
-    margin: "0 32px 0 16px",
-    flexShrink: 0,
-    width: "300px",
-    height: "40px",
-    textTransform: "none",
-    backgroundColor: "rgb(161,168,171)",
-    color: "white",
-    "&:hover": {
-      backgroundColor: "rgba(171,177,180, 0.9)",
-    },
-  },
-  addList: {
-    flexShrink: 0,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    backgroundColor: "rgb(235,236,240)",
-    width: "300px",
-    height: "115px",
-    margin: "0 0 0 16px",
-    display: "none",
-  },
-  addBtText: {},
-  addListInput: {
-    fontSize: "15px",
-    outline: "none",
-    border: "2px solid rgb(0,121,191)",
-    borderRadius: "5px",
-    width: "256px",
-    height: "17px",
-    padding: "10px 10px",
-    margin: "12px 9px",
-    resize: "none",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  },
-  addListBt: {
-    position: "absolute",
-    top: "55px",
-    left: "10px",
-    outline: "none",
-    border: "none",
-    zIndex: 1200,
-    borderRadius: "5px",
-    backgroundColor: "rgb(90,172,68)",
-    marginTop: "10px",
-    color: "white",
-    padding: "8px 16px",
-    fontSize: "14px",
-    cursor: "pointer",
-  },
-  closeIcon: {
-    position: "relative",
-    top: "4px",
-    left: "100px",
-    cursor: "pointer",
-    color: "rgb(108,120,141)",
-    fontSize: "25px",
-  },
   deleteBoardbox: {
     display: "none",
     position: "fixed",
@@ -213,6 +151,16 @@ const useStyles = makeStyles({
     color: "rgb(108,120,141)",
     fontSize: "28px",
   },
+  listAdd: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "290px",
+    height: "100%",
+    backgroundColor: "rgba(154,160,163, 0.9)",
+    borderRadius: "5px",
+    margin: "0 16px",
+  },
 });
 
 const Board = () => {
@@ -238,12 +186,10 @@ const Board = () => {
   });
 
   const [boardName, setBoardName] = useState(firstBoardName);
-  const [newList, setNewList] = useState("");
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
   const stEl = useRef<HTMLButtonElement>(null);
-  const addListEl = useRef<HTMLDivElement>(null);
   const deleteBoardEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -294,20 +240,6 @@ const Board = () => {
     displayNone(deleteBoardEl);
     dispatch(deleteBoard(boardId));
     history.push("/");
-  };
-  const onChangeList = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setNewList(value);
-  };
-  const onClickAddList = () => {
-    if (newList !== "") {
-      dispatch(addList(newList, boardId));
-      onClickClose();
-    }
-  };
-  const onClickClose = () => {
-    displayNone(addListEl);
-    setNewList("");
   };
 
   const onDragEnd = (result: any) => {
@@ -418,38 +350,8 @@ const Board = () => {
                 )}
               </>
             )}
-            <div style={{ position: "relative" }}>
-              <Button
-                className={classes.addBt}
-                onClick={() => displayBlock(addListEl)}
-                disableRipple
-              >
-                <div style={{ position: "absolute", left: "20px" }}>
-                  + Add a List
-                </div>
-              </Button>
-
-              <Card ref={addListEl} className={classes.addList}>
-                <div className={classes.addBtText}>
-                  <input
-                    className={classes.addListInput}
-                    placeholder="Input List title ..."
-                    onChange={onChangeList}
-                    value={newList}
-                    maxLength={15}
-                  />
-                  <button
-                    className={classes.addListBt}
-                    onClick={onClickAddList}
-                  >
-                    Add List
-                  </button>
-                  <CloseIcon
-                    className={classes.closeIcon}
-                    onClick={onClickClose}
-                  />
-                </div>
-              </Card>
+            <div className={classes.listAdd}>
+              <ListCardAdd list index={0} boardId={boardId} />
             </div>
           </div>
         </DragDropContext>
