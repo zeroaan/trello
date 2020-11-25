@@ -1,113 +1,118 @@
 import React from "react";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 
 import { editCard, deleteCard } from "store/actions/trello";
 
 import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
-  list: {
-    minHeight: "22px",
-    position: "relative",
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "12px",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "rgb(244,245,247)",
-    },
-    "&.dragging": {
-      opacity: "0.4",
-    },
-    "&:hover svg": {
-      display: "block",
-    },
-  },
-  editIcon: {
-    color: "rgb(131,140,145)",
-    display: "none",
-    padding: "10px",
-    position: "absolute",
-    top: "4px",
-    right: "4px",
-    fontSize: "16px",
-    borderRadius: "5px",
-    "&:hover": {
-      color: "black",
-      backgroundColor: "rgb(235,236,240)",
-    },
-  },
-  blackBox: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    zIndex: 1100,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  editListInput: {
-    position: "absolute",
-    top: "-12px",
-    left: 0,
-    fontSize: "16px",
-    outline: "none",
-    border: "none",
-    borderRadius: "5px",
-    width: "252px",
-    height: "60px",
-    padding: "12px 12px",
-    marginTop: "12px",
-    resize: "none",
-    zIndex: 1200,
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-  },
-  closeIcon: {
-    position: "absolute",
-    top: "93px",
-    left: "245px",
-    cursor: "pointer",
-    color: "black",
-    fontSize: "25px",
-    zIndex: 1200,
-  },
-  editListBt: {
-    position: "absolute",
-    top: "80px",
-    left: "0px",
-    outline: "none",
-    border: "none",
-    zIndex: 1200,
-    borderRadius: "5px",
-    backgroundColor: "rgb(90,172,68)",
-    marginTop: "10px",
-    color: "white",
-    padding: "8px 21px",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-  deleteListBt: {
-    position: "absolute",
-    top: "80px",
-    left: "85px",
-    outline: "none",
-    border: "none",
-    zIndex: 1200,
-    borderRadius: "5px",
-    backgroundColor: "rgb(250,60,84)",
-    marginTop: "10px",
-    color: "white",
-    padding: "8px 15px",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-});
+const PaperStyled = styled(Paper)`
+  min-height: 22px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  cursor: pointer;
+  &:hover {
+    backgroundcolor: rgb(244, 245, 247);
+  }
+  &.dragging {
+    opacity: 0.4;
+  }
+  &:hover svg {
+    display: block;
+  }
+`;
+const PListText = styled.p`
+  max-width: 250px;
+  word-break: break-word;
+`;
+const CreateIconStyled = styled(CreateIcon)`
+  color: rgb(131, 140, 145);
+  display: none;
+  padding: 10px;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 16px;
+  border-radius: 5px;
+  &:hover {
+    color: black;
+    background-color: rgb(235, 236, 240);
+  }
+`;
+const DivBlack = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1100;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+const DivEmptyBox = styled.div`
+  height: 82px;
+`;
+const TextareaStyled = styled.textarea`
+  position: absolute;
+  top: -12px;
+  left: 0;
+  font-size: 16px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 252px;
+  height: 60px;
+  padding: 12px 12px;
+  margin-top: 12px;
+  resize: none;
+  z-index: 1200;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const CloseIconStyled = styled(CloseIcon)`
+  position: absolute;
+  top: 93px;
+  left: 245px;
+  cursor: pointer;
+  color: black;
+  font-size: 25px;
+  z-index: 1200;
+`;
+const ButtonEdit = styled.button`
+  position: absolute;
+  top: 80px;
+  left: 0px;
+  outline: none;
+  border: none;
+  z-index: 1200;
+  border-radius: 5px;
+  background-color: rgb(90, 172, 68);
+  margin-top: 10px;
+  color: white;
+  padding: 8px 21px;
+  font-size: 16px;
+  cursor: pointer;
+`;
+const ButtonDelete = styled.button`
+  position: absolute;
+  top: 80px;
+  left: 85px;
+  outline: none;
+  border: none;
+  z-index: 1200;
+  border-radius: 5px;
+  background-color: rgb(250, 60, 84);
+  margin-top: 10px;
+  color: white;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
+`;
 
 interface Props {
   edit?: boolean;
@@ -126,8 +131,6 @@ const CardContent: React.FC<Props> = ({
   listIndex,
   boardId,
 }) => {
-  const classes = useStyles();
-
   const dispatch = useDispatch();
 
   const [editList, setEditList] = useState(list);
@@ -159,31 +162,26 @@ const CardContent: React.FC<Props> = ({
 
   const ContentCard = () => {
     return (
-      <Paper className={classes.list}>
-        <p style={{ maxWidth: "250px", wordBreak: "break-word" }}>{list}</p>
-        <CreateIcon className={classes.editIcon} onClick={onClickEditOpen} />
-      </Paper>
+      <PaperStyled>
+        <PListText>{list}</PListText>
+        <CreateIconStyled onClick={onClickEditOpen} />
+      </PaperStyled>
     );
   };
   const EditCard = () => {
     return (
       <>
-        <div className={classes.blackBox} onClick={onClickEditClose}></div>
-        <div style={{ height: "82px" }}></div>
-        <textarea
-          className={classes.editListInput}
+        <DivBlack onClick={onClickEditClose}></DivBlack>
+        <DivEmptyBox></DivEmptyBox>
+        <TextareaStyled
           placeholder="Input card ..."
           value={editList}
           onChange={onChangeEditList}
           autoFocus
         />
-        <CloseIcon className={classes.closeIcon} onClick={onClickEditClose} />
-        <button className={classes.editListBt} onClick={onClickSave}>
-          Save
-        </button>
-        <button className={classes.deleteListBt} onClick={onClickDelete}>
-          Delete
-        </button>
+        <CloseIconStyled onClick={onClickEditClose} />
+        <ButtonEdit onClick={onClickSave}>Save</ButtonEdit>
+        <ButtonDelete onClick={onClickDelete}>Delete</ButtonDelete>
       </>
     );
   };
