@@ -186,9 +186,7 @@ const Board = () => {
       <div className={classes.screen}>
         <div className={classes.boardName}>
           <BoardStarButton boardStar={boardStar} boardId={boardId} />
-          <div style={{ width: "100%" }}>
-            <BoardTitle boardName={boardName} boardId={boardId} />
-          </div>
+          <BoardTitle boardName={boardName} boardId={boardId} />
 
           <button
             className={classes.deleteBt}
