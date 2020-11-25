@@ -11,7 +11,7 @@ import { BoardState, ListType, CardType } from "store/reducers/trello";
 
 import List from "components/List";
 import Navbar from "components/Navbar";
-import BoardStarButton from "components/BoardStarButton";
+import BoardStarButton from "components/BoardStar";
 import BoardTitle from "components/BoardTitle";
 import BoardDelete from "components/BoardDelete";
 import ListCardAdd from "components/ListCardAdd";
