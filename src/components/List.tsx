@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
+import styled from "styled-components";
 
 import { CardType } from "store/reducers/trello";
 
@@ -11,64 +12,53 @@ import ListCardAdd from "components/ListCardAdd";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
-  list: {
-    flexShrink: 0,
-    position: "relative",
-    backgroundColor: "rgb(235,236,240)",
-    width: "300px",
-    height: "100%",
-    margin: "0 0 0 16px",
-    overflow: "visible",
-  },
-  menuBt: {
-    fontSize: "18px",
-    position: "absolute",
-    top: "15px",
-    right: "12px",
-    fontWeight: "bold",
-    outline: "none",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "50px",
-    backgroundColor: "rgb(235,236,240)",
-  },
-  cardContent: {
-    marginTop: "10px",
-    padding: "0 12px",
-    overflow: "auto",
-    maxHeight: "375px",
-    "&::-webkit-scrollbar": {
-      width: "8px",
-    },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgb(191,196,206)",
-      borderRadius: "10px",
-    },
-    "&::-webkit-scrollbar-track": {
-      backgroundColor: "rgb(218,219,226)",
-      borderRadius: "10px",
-    },
-  },
-  listAcBack: {
-    position: "absolute",
-    top: "12px",
-    left: "9px",
-    fontSize: "15px",
-    cursor: "pointer",
-    zIndex: 1,
-  },
-  cardActions: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "278px",
-    margin: "auto",
-    marginBottom: "6px",
-  },
-});
+const CardStyled = styled(Card)`
+  flex-shrink: 0;
+  position: relative;
+  background-color: rgb(235, 236, 240);
+  width: 300px;
+  height: 100%;
+  margin: 0 0 0 16px;
+  overflow: visible;
+`;
+const ButtonAction = styled.button`
+  font-size: 18px;
+  position: absolute;
+  top: 15px;
+  right: 12px;
+  font-weight: bold;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50px;
+  background-color: rgb(235, 236, 240);
+`;
+const CardContentStyled = styled(CardContent)`
+  margin-top: 10px;
+  padding: 0 12px;
+  overflow: auto;
+  max-height: 375px;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(191, 196, 206);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgb(218, 219, 226);
+    border-radius: 10px;
+  }
+`;
+const DivCardAction = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 278px;
+  margin: auto;
+  margin-bottom: 6px;
+`;
 
 interface Props {
   title: string;
@@ -79,17 +69,13 @@ interface Props {
 }
 
 const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
-  const classes = useStyles();
-
   const [actionOpen, setActionOpen] = useState(false);
 
   return (
     <>
-      <Card className={classes.list}>
+      <CardStyled>
         <ListTitle title={title} index={index} boardId={boardId} />
-        <button className={classes.menuBt} onClick={() => setActionOpen(true)}>
-          ⋯
-        </button>
+        <ButtonAction onClick={() => setActionOpen(true)}>⋯</ButtonAction>
         {actionOpen ? (
           <ListAction
             setActionOpen={setActionOpen}
@@ -99,10 +85,9 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
         ) : null}
         <Droppable droppableId={String(listId)}>
           {(provided) => (
-            <CardContent
+            <CardContentStyled
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className={classes.cardContent}
             >
               {list.map((v, i) => (
                 <ListCard
@@ -115,13 +100,13 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
                 />
               ))}
               {provided.placeholder}
-            </CardContent>
+            </CardContentStyled>
           )}
         </Droppable>
-        <div className={classes.cardActions}>
+        <DivCardAction>
           <ListCardAdd index={index} boardId={boardId} />
-        </div>
-      </Card>
+        </DivCardAction>
+      </CardStyled>
     </>
   );
 };
