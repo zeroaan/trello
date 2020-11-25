@@ -7,6 +7,50 @@ import { addCard, addList } from "store/actions/trello";
 import Button from "@material-ui/core/Button";
 import CloseIcon from "@material-ui/icons/Close";
 
+const ButtonLCAc = styled(Button)`
+  padding: 8px;
+  width: 278px;
+  text-transform: none;
+  border-radius: 5px;
+`;
+const DivBackGroundColor = styled.div`
+  padding: 8px;
+  border-radius: 5px;
+`;
+const TextareaLCAc = styled.textarea`
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  font-size: 16px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 256px;
+  padding: 10px 10px;
+  resize: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const ButtonAddLCAc = styled.button`
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: rgb(90, 172, 68);
+  margin-top: 5px;
+  color: white;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+`;
+const CloseIconLCAc = styled(CloseIcon)`
+  position: relative;
+  top: 5px;
+  left: 8px;
+  cursor: pointer;
+  color: rgb(108, 120, 141);
+  font-size: 25px;
+`;
+
 interface Props {
   list?: boolean;
   index: number;
@@ -20,53 +64,6 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
   const AddButtonValue = list ? "Add List" : "Add Card";
   const buttonValueColor = list ? "white" : "black";
   const BackgroundColor = list ? "rgb(235,236,240)" : "inherit";
-
-  const ButtonLCAc = styled(Button)`
-    padding: 8px;
-    width: 278px;
-    text-transform: none;
-    border-radius: 5px;
-    color: ${buttonValueColor};
-  `;
-  const DivBackGroundColor = styled.div`
-    padding: 8px;
-    border-radius: 5px;
-    background-color: ${BackgroundColor};
-  `;
-  const TextareaLCAc = styled.textarea`
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-      0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-    font-size: 16px;
-    outline: none;
-    border: none;
-    border-radius: 5px;
-    width: 256px;
-    height: ${InputHeight};
-    padding: 10px 10px;
-    resize: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  `;
-  const ButtonAddLCAc = styled.button`
-    border-radius: 5px;
-    outline: none;
-    border: none;
-    background-color: rgb(90, 172, 68);
-    margin-top: 5px;
-    color: white;
-    padding: 6px 10px;
-    font-size: 16px;
-    cursor: pointer;
-  `;
-  const CloseIconLCAc = styled(CloseIcon)`
-    position: relative;
-    top: 5px;
-    left: 8px;
-    cursor: pointer;
-    color: rgb(108, 120, 141);
-    font-size: 25px;
-  `;
 
   const dispatch = useDispatch();
 
@@ -103,15 +100,20 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 
   const AddButton = () => {
     return (
-      <ButtonLCAc onClick={onClickOpen} disableRipple>
+      <ButtonLCAc
+        style={{ color: buttonValueColor }}
+        onClick={onClickOpen}
+        disableRipple
+      >
         {buttonValue}
       </ButtonLCAc>
     );
   };
   const AddInput = () => {
     return (
-      <DivBackGroundColor>
+      <DivBackGroundColor style={{ backgroundColor: BackgroundColor }}>
         <TextareaLCAc
+          style={{ height: InputHeight }}
           ref={inputEl}
           placeholder={placeholder}
           value={text}
