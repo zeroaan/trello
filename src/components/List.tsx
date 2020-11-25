@@ -13,7 +13,7 @@ import ListCardAdd from "components/ListCardAdd";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
-const CardStyled = styled(Card)`
+const CardList = styled(Card)`
   flex-shrink: 0;
   position: relative;
   background-color: rgb(235, 236, 240);
@@ -34,7 +34,7 @@ const ButtonAction = styled.button`
   border-radius: 50px;
   background-color: rgb(235, 236, 240);
 `;
-const CardContentStyled = styled(CardContent)`
+const CardContentList = styled(CardContent)`
   margin-top: 10px;
   padding: 0 12px;
   overflow: auto;
@@ -73,7 +73,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
 
   return (
     <>
-      <CardStyled>
+      <CardList>
         <ListTitle title={title} index={index} boardId={boardId} />
         <ButtonAction onClick={() => setActionOpen(true)}>⋯</ButtonAction>
         {actionOpen ? (
@@ -85,7 +85,7 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
         ) : null}
         <Droppable droppableId={String(listId)}>
           {(provided) => (
-            <CardContentStyled
+            <CardContentList
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -100,13 +100,13 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
                 />
               ))}
               {provided.placeholder}
-            </CardContentStyled>
+            </CardContentList>
           )}
         </Droppable>
         <DivCardAction>
           <ListCardAdd index={index} boardId={boardId} />
         </DivCardAction>
-      </CardStyled>
+      </CardList>
     </>
   );
 };

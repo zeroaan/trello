@@ -16,7 +16,7 @@ const DivHome = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const DivBoardBox = styled.div`
+const DivBoards = styled.div`
   margin: 20px;
 `;
 
@@ -29,15 +29,15 @@ const Trello = () => {
     <>
       <Navbar />
       <DivHome>
-        <DivBoardBox>
+        <DivBoards>
           <h3>My Boards</h3>
           <TrelloBoards />
-        </DivBoardBox>
+        </DivBoards>
         {starCount === 0 ? null : (
-          <DivBoardBox>
+          <DivBoards>
             <h3>Starred Boards</h3>
             <TrelloBoards star />
-          </DivBoardBox>
+          </DivBoards>
         )}
       </DivHome>
     </>

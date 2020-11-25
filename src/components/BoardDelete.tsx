@@ -9,7 +9,7 @@ import Card from "@material-ui/core/Card";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const ButtonDelete = styled.button`
+const ButtonBoardDelete = styled.button`
   position: absolute;
   right: 20px;
   background-color: rgba(154, 160, 163, 0.9);
@@ -25,7 +25,7 @@ const ButtonDelete = styled.button`
     background-color: rgba(171, 177, 180, 0.9);
   }
 `;
-const DivDelete = styled.div`
+const DivBoardDelete = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -34,7 +34,7 @@ const DivDelete = styled.div`
   z-index: 1100;
   background-color: rgba(0, 0, 0, 0.5);
 `;
-const CardStyled = styled(Card)`
+const CardBoardDelete = styled(Card)`
   background-color: rgb(235, 236, 240);
   width: 370px;
   height: 200px;
@@ -42,19 +42,19 @@ const CardStyled = styled(Card)`
   position: relative;
   top: 230px;
 `;
-const H3Styled = styled.h3`
+const H3BoardDelete = styled.h3`
   position: relative;
   top: 25px;
   left: 43px;
 `;
-const PStyled = styled.p`
+const PBoardDelete = styled.p`
   position: relative;
   top: 50px;
   left: 83px;
   font-size: 20px;
   color: black;
 `;
-const ButtonDeleteDispatch = styled.button`
+const ButtonBoardDeleteDispatch = styled.button`
   position: relative;
   top: 70px;
   left: 110px;
@@ -69,7 +69,7 @@ const ButtonDeleteDispatch = styled.button`
   font-size: 15px;
   cursor: pointer;
 `;
-const CloseIconStyled = styled(CloseIcon)`
+const CloseIconBoardDelete = styled(CloseIcon)`
   position: relative;
   top: -35px;
   left: 165px;
@@ -96,9 +96,9 @@ const BoardDelete: React.FC<Props> = ({ boardId }) => {
   const DeleteButton = () => {
     return (
       <>
-        <ButtonDelete onClick={() => setDeleteBox(true)}>
+        <ButtonBoardDelete onClick={() => setDeleteBox(true)}>
           <DeleteIcon style={{ fontSize: "20px", color: "white" }} />
-        </ButtonDelete>
+        </ButtonBoardDelete>
       </>
     );
   };
@@ -106,16 +106,16 @@ const BoardDelete: React.FC<Props> = ({ boardId }) => {
     return (
       <>
         {DeleteButton()}
-        <DivDelete>
-          <CardStyled>
-            <H3Styled>Delete Board</H3Styled>
-            <PStyled>삭제 후 되돌릴 수 없습니다.</PStyled>
-            <ButtonDeleteDispatch onClick={onClickDeleteBoard}>
+        <DivBoardDelete>
+          <CardBoardDelete>
+            <H3BoardDelete>Delete Board</H3BoardDelete>
+            <PBoardDelete>삭제 후 되돌릴 수 없습니다.</PBoardDelete>
+            <ButtonBoardDeleteDispatch onClick={onClickDeleteBoard}>
               Delete This Board
-            </ButtonDeleteDispatch>
-            <CloseIconStyled onClick={() => setDeleteBox(false)} />
-          </CardStyled>
-        </DivDelete>
+            </ButtonBoardDeleteDispatch>
+            <CloseIconBoardDelete onClick={() => setDeleteBox(false)} />
+          </CardBoardDelete>
+        </DivBoardDelete>
       </>
     );
   };

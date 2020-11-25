@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
 import CloseIcon from "@material-ui/icons/Close";
 
-const PaperStyled = styled(Paper)`
+const PaperCardContent = styled(Paper)`
   min-height: 22px;
   position: relative;
   display: flex;
@@ -30,7 +30,7 @@ const PListText = styled.p`
   max-width: 250px;
   word-break: break-word;
 `;
-const CreateIconStyled = styled(CreateIcon)`
+const CreateIconCardContent = styled(CreateIcon)`
   color: rgb(131, 140, 145);
   display: none;
   padding: 10px;
@@ -56,7 +56,7 @@ const DivBlack = styled.div`
 const DivEmptyBox = styled.div`
   height: 82px;
 `;
-const TextareaStyled = styled.textarea`
+const TextareaCardContent = styled.textarea`
   position: absolute;
   top: -12px;
   left: 0;
@@ -74,7 +74,7 @@ const TextareaStyled = styled.textarea`
     display: none;
   }
 `;
-const CloseIconStyled = styled(CloseIcon)`
+const CloseIconCardContent = styled(CloseIcon)`
   position: absolute;
   top: 93px;
   left: 245px;
@@ -83,7 +83,7 @@ const CloseIconStyled = styled(CloseIcon)`
   font-size: 25px;
   z-index: 1200;
 `;
-const ButtonEdit = styled.button`
+const ButtonCardEdit = styled.button`
   position: absolute;
   top: 80px;
   left: 0px;
@@ -98,7 +98,7 @@ const ButtonEdit = styled.button`
   font-size: 16px;
   cursor: pointer;
 `;
-const ButtonDelete = styled.button`
+const ButtonCardDelete = styled.button`
   position: absolute;
   top: 80px;
   left: 85px;
@@ -162,10 +162,10 @@ const CardContent: React.FC<Props> = ({
 
   const ContentCard = () => {
     return (
-      <PaperStyled>
+      <PaperCardContent>
         <PListText>{list}</PListText>
-        <CreateIconStyled onClick={onClickEditOpen} />
-      </PaperStyled>
+        <CreateIconCardContent onClick={onClickEditOpen} />
+      </PaperCardContent>
     );
   };
   const EditCard = () => {
@@ -173,15 +173,15 @@ const CardContent: React.FC<Props> = ({
       <>
         <DivBlack onClick={onClickEditClose}></DivBlack>
         <DivEmptyBox></DivEmptyBox>
-        <TextareaStyled
+        <TextareaCardContent
           placeholder="Input card ..."
           value={editList}
           onChange={onChangeEditList}
           autoFocus
         />
-        <CloseIconStyled onClick={onClickEditClose} />
-        <ButtonEdit onClick={onClickSave}>Save</ButtonEdit>
-        <ButtonDelete onClick={onClickDelete}>Delete</ButtonDelete>
+        <CloseIconCardContent onClick={onClickEditClose} />
+        <ButtonCardEdit onClick={onClickSave}>Save</ButtonCardEdit>
+        <ButtonCardDelete onClick={onClickDelete}>Delete</ButtonCardDelete>
       </>
     );
   };

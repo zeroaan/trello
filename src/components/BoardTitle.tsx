@@ -6,7 +6,7 @@ import { changeBoardName } from "store/actions/trello";
 
 import Typography from "@material-ui/core/Typography";
 
-const TypographyStyled = styled(Typography)`
+const TypographyBoardTitle = styled(Typography)`
   position: absolute;
   top: 0;
   left: 60px;
@@ -22,12 +22,12 @@ const TypographyStyled = styled(Typography)`
     background-color: rgba(154, 160, 163, 0.9);
   }
 `;
-const FormStyled = styled.form`
+const FormBoardTitle = styled.form`
   position: absolute;
   top: 0;
   left: 60px;
 `;
-const InputStyled = styled.input`
+const InputBoardTitle = styled.input`
   padding: 0 12px;
   outline: none;
   border: none;
@@ -67,22 +67,22 @@ const BoardTitle: React.FC<Props> = ({ boardName, boardId }) => {
 
   const BoardTitleText = () => {
     return (
-      <TypographyStyled variant="h6" onClick={() => setTitleInput(true)}>
+      <TypographyBoardTitle variant="h6" onClick={() => setTitleInput(true)}>
         {boardName}
-      </TypographyStyled>
+      </TypographyBoardTitle>
     );
   };
   const BoardTitleInput = () => {
     return (
-      <FormStyled onSubmit={onSubmitForm}>
-        <InputStyled
+      <FormBoardTitle onSubmit={onSubmitForm}>
+        <InputBoardTitle
           value={boardText}
           onChange={onChangeName}
           onBlur={onBlurInput}
           maxLength={15}
           autoFocus
         />
-      </FormStyled>
+      </FormBoardTitle>
     );
   };
 

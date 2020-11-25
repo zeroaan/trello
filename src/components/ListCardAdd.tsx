@@ -21,7 +21,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
   const buttonValueColor = list ? "white" : "black";
   const BackgroundColor = list ? "rgb(235,236,240)" : "inherit";
 
-  const ButtonStyled = styled(Button)`
+  const ButtonLCAc = styled(Button)`
     padding: 8px;
     width: 278px;
     text-transform: none;
@@ -33,7 +33,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
     border-radius: 5px;
     background-color: ${BackgroundColor};
   `;
-  const TextareaStyled = styled.textarea`
+  const TextareaLCAc = styled.textarea`
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
       0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     font-size: 16px;
@@ -48,7 +48,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
       display: none;
     }
   `;
-  const ButtonAdd = styled.button`
+  const ButtonAddLCAc = styled.button`
     border-radius: 5px;
     outline: none;
     border: none;
@@ -59,7 +59,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
     font-size: 16px;
     cursor: pointer;
   `;
-  const CloseIconStyled = styled(CloseIcon)`
+  const CloseIconLCAc = styled(CloseIcon)`
     position: relative;
     top: 5px;
     left: 8px;
@@ -79,10 +79,12 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
   };
   const onClickClose = () => {
     setaddInput(false);
+    setText("");
   };
   const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
     setText(value);
+    console.log(value);
   };
   const onClickAddCard = () => {
     if (text !== "") {
@@ -101,23 +103,22 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 
   const AddButton = () => {
     return (
-      <ButtonStyled onClick={onClickOpen} disableRipple>
+      <ButtonLCAc onClick={onClickOpen} disableRipple>
         {buttonValue}
-      </ButtonStyled>
+      </ButtonLCAc>
     );
   };
   const AddInput = () => {
     return (
       <DivBackGroundColor>
-        <TextareaStyled
+        <TextareaLCAc
           ref={inputEl}
           placeholder={placeholder}
           value={text}
           onChange={onChangeCard}
-          autoFocus
         />
-        <ButtonAdd onClick={onClickAddCard}>{AddButtonValue}</ButtonAdd>
-        <CloseIconStyled onClick={onClickClose} />
+        <ButtonAddLCAc onClick={onClickAddCard}>{AddButtonValue}</ButtonAddLCAc>
+        <CloseIconLCAc onClick={onClickClose} />
       </DivBackGroundColor>
     );
   };

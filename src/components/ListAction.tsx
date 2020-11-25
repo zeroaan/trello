@@ -16,7 +16,7 @@ const DivActionBt = styled.div`
   align-items: center;
   margin-top: 15px;
 `;
-const ButtonStyled = styled(Button)`
+const ButtonListAc = styled(Button)`
   width: 179px;
 `;
 const DivAction = styled.div`
@@ -36,7 +36,7 @@ const InputCopy = styled.input`
     display: none;
   }
 `;
-const ButtonCopy = styled.button`
+const ButtonCopyAc = styled.button`
   position: relative;
   left: 48px;
   border-radius: 5px;
@@ -51,7 +51,7 @@ const ButtonCopy = styled.button`
 const PDelete = styled.p`
   margin: 35px 0 20px 0;
 `;
-const ButtonDelete = styled.button`
+const ButtonDeleteAc = styled.button`
   margin: 0px 47px;
   border-radius: 5px;
   outline: none;
@@ -62,7 +62,7 @@ const ButtonDelete = styled.button`
   font-size: 15px;
   cursor: pointer;
 `;
-const PaperStyled = styled(Paper)`
+const PaperListAc = styled(Paper)`
   z-index: 100;
   position: absolute;
   top: 13px;
@@ -71,20 +71,20 @@ const PaperStyled = styled(Paper)`
   height: 165px;
   border: 1px solid rgb(218, 219, 226);
 `;
-const TypographyStyled = styled(Typography)`
+const TypographyListAc = styled(Typography)`
   font-family: "Jua", sans-serif;
   position: relative;
   top: 8px;
   text-align: center;
 `;
-const CloseIconStyled = styled(CloseIcon)`
+const CloseIconListAc = styled(CloseIcon)`
   position: absolute;
   top: 12px;
   right: 9px;
   font-size: 17px;
   cursor: pointer;
 `;
-const HrStyled = styled.hr`
+const HrListAc = styled.hr`
   position: relative;
   top: 10px;
   width: 170px;
@@ -137,15 +137,15 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
   const ActionHome = () => {
     return (
       <DivActionBt>
-        <ButtonStyled onClick={onClickListAcAddCard} disableRipple>
+        <ButtonListAc onClick={onClickListAcAddCard} disableRipple>
           Add Card
-        </ButtonStyled>
-        <ButtonStyled onClick={onClickListAcCopy} disableRipple>
+        </ButtonListAc>
+        <ButtonListAc onClick={onClickListAcCopy} disableRipple>
           Copy List
-        </ButtonStyled>
-        <ButtonStyled onClick={onClickListAcDelete} disableRipple>
+        </ButtonListAc>
+        <ButtonListAc onClick={onClickListAcDelete} disableRipple>
           Delete This List
-        </ButtonStyled>
+        </ButtonListAc>
       </DivActionBt>
     );
   };
@@ -160,7 +160,7 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
           maxLength={15}
           autoFocus
         />
-        <ButtonCopy onClick={onClickAddList}>Create</ButtonCopy>
+        <ButtonCopyAc onClick={onClickAddList}>Create</ButtonCopyAc>
       </DivAction>
     );
   };
@@ -168,7 +168,7 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
     return (
       <DivAction>
         <PDelete>삭제 후 되돌릴 수 없습니다.</PDelete>
-        <ButtonDelete onClick={onClickDeleteList}>Delete</ButtonDelete>
+        <ButtonDeleteAc onClick={onClickDeleteList}>Delete</ButtonDeleteAc>
       </DivAction>
     );
   };
@@ -181,12 +181,12 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
 
   return (
     <>
-      <PaperStyled onMouseLeave={onClickListAcClose}>
-        <TypographyStyled variant="subtitle1">{ActionTitle}</TypographyStyled>
-        <CloseIconStyled onClick={onClickListAcClose} />
-        <HrStyled />
+      <PaperListAc onMouseLeave={onClickListAcClose}>
+        <TypographyListAc variant="subtitle1">{ActionTitle}</TypographyListAc>
+        <CloseIconListAc onClick={onClickListAcClose} />
+        <HrListAc />
         {copyAction ? ListCopy() : deleteAction ? ListDelete() : ActionHome()}
-      </PaperStyled>
+      </PaperListAc>
     </>
   );
 };

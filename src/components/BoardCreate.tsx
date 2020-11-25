@@ -20,7 +20,7 @@ const DivNewBoard = styled.div`
   z-index: 1100;
   background-color: rgba(0, 0, 0, 0.5);
 `;
-const CardStyled = styled(Card)`
+const CardNewBoard = styled(Card)`
   background-color: rgb(235, 236, 240);
   width: 370px;
   height: 200px;
@@ -33,7 +33,7 @@ const H3BoardTitle = styled.h3`
   top: 25px;
   left: 43px;
 `;
-const InputStyled = styled.input`
+const InputNewBoard = styled.input`
   position: relative;
   top: 50px;
   left: 40px;
@@ -49,7 +49,7 @@ const InputStyled = styled.input`
     display: none;
   }
 `;
-const ButtonStyled = styled.button`
+const ButtonNewBoard = styled.button`
   position: relative;
   top: 60px;
   left: 115px;
@@ -64,7 +64,7 @@ const ButtonStyled = styled.button`
   font-size: 15px;
   cursor: pointer;
 `;
-const CloseIconStyled = styled(CloseIcon)`
+const CloseIconNewBoard = styled(CloseIcon)`
   position: relative;
   top: -50px;
   left: 180px;
@@ -105,18 +105,20 @@ const BoardCreate: React.FC<Props> = ({ setCreateBoard }) => {
   return (
     <>
       <DivNewBoard>
-        <CardStyled>
+        <CardNewBoard>
           <H3BoardTitle>New Board</H3BoardTitle>
-          <InputStyled
+          <InputNewBoard
             placeholder="Input Board Name ..."
             value={newBoard}
             onChange={onChangeBoard}
             maxLength={15}
             autoFocus
           />
-          <ButtonStyled onClick={onClickAddBoard}>Create a Board</ButtonStyled>
-          <CloseIconStyled onClick={onClickClose} />
-        </CardStyled>
+          <ButtonNewBoard onClick={onClickAddBoard}>
+            Create a Board
+          </ButtonNewBoard>
+          <CloseIconNewBoard onClick={onClickClose} />
+        </CardNewBoard>
       </DivNewBoard>
     </>
   );

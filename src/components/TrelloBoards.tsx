@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { RootState } from "store/reducers";
 import { BoardState } from "store/reducers/trello";
 
-const DivBoards = styled.div`
+const DivBoard = styled.div`
   margin-top: 10px;
   width: 730px;
   height: 150px;
@@ -62,18 +62,18 @@ const TrelloBoards: React.FC<Props> = ({ star }) => {
 
   const AllBoards = () => {
     return (
-      <DivBoards>
+      <DivBoard>
         {boards.map((v, i) => (
           <DivBoardLink key={i} to={`/board/${v.id}`}>
             <DivBoardBox>{v.boardName}</DivBoardBox>
           </DivBoardLink>
         ))}
-      </DivBoards>
+      </DivBoard>
     );
   };
   const StarBoards = () => {
     return (
-      <DivBoards>
+      <DivBoard>
         {boards.map((v, i) => {
           if (v.star === true) {
             return (
@@ -85,7 +85,7 @@ const TrelloBoards: React.FC<Props> = ({ star }) => {
             return null;
           }
         })}
-      </DivBoards>
+      </DivBoard>
     );
   };
 
