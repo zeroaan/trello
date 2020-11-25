@@ -118,6 +118,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
           placeholder={placeholder}
           value={text}
           onChange={onChangeCard}
+          autoFocus
         />
         <ButtonAddLCAc onClick={onClickAddCard}>{AddButtonValue}</ButtonAddLCAc>
         <CloseIconLCAc onClick={onClickClose} />
