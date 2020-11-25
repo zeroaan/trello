@@ -11,7 +11,6 @@ import ListCardAdd from "components/ListCardAdd";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -40,7 +39,6 @@ const useStyles = makeStyles({
     marginTop: "10px",
     padding: "0 12px",
     overflow: "auto",
-    minHeight: "5px",
     maxHeight: "375px",
     "&::-webkit-scrollbar": {
       width: "8px",
@@ -68,6 +66,7 @@ const useStyles = makeStyles({
     alignItems: "center",
     width: "278px",
     margin: "auto",
+    marginBottom: "6px",
   },
 });
 
@@ -119,9 +118,9 @@ const List: React.FC<Props> = ({ title, list, index, boardId, listId }) => {
             </CardContent>
           )}
         </Droppable>
-        <CardActions className={classes.cardActions}>
+        <div className={classes.cardActions}>
           <ListCardAdd index={index} boardId={boardId} />
-        </CardActions>
+        </div>
       </Card>
     </>
   );

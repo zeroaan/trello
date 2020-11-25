@@ -22,12 +22,14 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
   const BackgroundColor = list ? "rgb(235,236,240)" : "inherit";
 
   const ButtonStyled = styled(Button)`
-    width: 290px;
+    padding: 8px;
+    width: 278px;
     text-transform: none;
+    border-radius: 5px;
     color: ${buttonValueColor};
   `;
   const DivBackGroundColor = styled.div`
-    padding: 6px 8px;
+    padding: 8px;
     border-radius: 5px;
     background-color: ${BackgroundColor};
   `;
