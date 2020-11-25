@@ -10,12 +10,12 @@ import CardHeader from "@material-ui/core/CardHeader";
 const CardHeaderTitle = styled(CardHeader)`
   margin: 13px 10px 0px 10px;
   font-size: 18px;
-  width: 210px;
+  width: 205px;
   height: 1px;
   cursor: pointer;
 `;
 const InputTitle = styled.input`
-  margin: 13px;
+  margin: 13px 10px 0px 13px;
   padding: 2px 11px;
   font-size: 18px;
   outline: none;
