@@ -4,17 +4,13 @@ import { useRouteMatch, useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import {
-  changeBoardName,
-  starBoard,
-  deleteBoard,
-  sortList,
-} from "store/actions/trello";
+import { changeBoardName, deleteBoard, sortList } from "store/actions/trello";
 import { RootState } from "store/reducers";
 import { BoardState, ListType, CardType } from "store/reducers/trello";
 
 import List from "components/List";
 import Navbar from "components/Navbar";
+import BoardStarButton from "components/BoardStarButton";
 import ListCardAdd from "components/ListCardAdd";
 
 import Typography from "@material-ui/core/Typography";
@@ -65,22 +61,6 @@ const useStyles = makeStyles({
     fontSize: "18px",
     whiteSpace: "pre",
     display: "none",
-  },
-  starBt: {
-    margin: "0 16px",
-    backgroundColor: "rgba(154,160,163, 0.9)",
-    width: "35px",
-    height: "35px",
-    textTransform: "none",
-    outline: "none",
-    border: "none",
-    borderRadius: "5px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    fontSize: "16px",
-    "&:hover": {
-      backgroundColor: "rgba(171,177,180, 0.9)",
-    },
   },
   deleteBt: {
     position: "absolute",
@@ -189,7 +169,6 @@ const Board = () => {
 
   const bnEl = useRef<HTMLInputElement>(null);
   const wtEl = useRef<HTMLInputElement>(null);
-  const stEl = useRef<HTMLButtonElement>(null);
   const deleteBoardEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -233,9 +212,6 @@ const Board = () => {
       bnEl.current.style.width = wtEl.current.scrollWidth - 8 + "px";
     }
   };
-  const onClickStar = () => {
-    dispatch(starBoard(boardId));
-  };
   const onClickDeleteBoard = () => {
     displayNone(deleteBoardEl);
     dispatch(deleteBoard(boardId));
@@ -265,25 +241,7 @@ const Board = () => {
       <Navbar />
       <div className={classes.screen}>
         <div className={classes.boardName}>
-          {boardStar ? (
-            <button
-              ref={stEl}
-              style={{ color: "yellow" }}
-              className={classes.starBt}
-              onClick={onClickStar}
-            >
-              ☆
-            </button>
-          ) : (
-            <button
-              ref={stEl}
-              style={{ color: "white" }}
-              className={classes.starBt}
-              onClick={onClickStar}
-            >
-              ☆
-            </button>
-          )}
+          <BoardStarButton boardStar={boardStar} boardId={boardId} />
           <Typography
             ref={wtEl}
             className={classes.boardNameText}
