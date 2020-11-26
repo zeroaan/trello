@@ -240,17 +240,206 @@ const BoardStarButton: React.FC<Props> = ({ boardStar, boardId }) => {
 
 ### List
 
+- 현재 Board에 있는 리스트들을 볼 수 있다.
+- List Title 수정, List Action(Copy, Delete), List Add 등을 할 수 있다.
+
+![listTitle](./img/listTitle.gif)
 <br />
 
 ### ListTitle
+
+- 해당 List의 Title을 변경할 수 있다.
+
+```tsx
+const ListTitle: React.FC<Props> = ({ title, index, boardId }) => {
+  const dispatch = useDispatch();
+  const [changeTitle, setChangeTitle] = useState(false);
+
+  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onBlurInput();
+  };
+  const onBlurInput = () => {
+    if (textTitle !== "") {
+      dispatch(changeListTitle(textTitle, index, boardId));
+    }
+    setChangeTitle(false);
+  };
+
+  const Title = () => {
+    return (
+      <CardHeaderTitle title={title} disableTypography onClick={onClickTitle} />
+    );
+  };
+  const TitleForm = () => {
+    return (
+      <form onSubmit={onSubmitForm}>
+        <InputTitle
+          value={textTitle}
+          onChange={onChangeInput}
+          onBlur={onBlurInput}
+          maxLength={15}
+          autoFocus
+        />
+      </form>
+    );
+  };
+
+  return changeTitle ? TitleForm() : Title();
+};
+```
 
 <br />
 
 ### ListAction
 
+- 해당 List Action(Add Card, Copy List, Delete List)를 할 수 있다.
+
+![listAction](./img/listAction.gif)
+
+```tsx
+const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
+  const dispatch = useDispatch();
+
+  const onClickAddList = () => {
+    if (newList !== "") {
+      onClickListAcClose();
+      dispatch(copyList(newList, index, boardId));
+      setNewList("");
+    }
+  };
+  const onClickDeleteList = () => {
+    onClickListAcClose();
+    dispatch(deleteList(index, boardId));
+  };
+
+  const ActionHome = () => {
+    return (
+      <DivActionBt>
+        <ButtonListAc onClick={onClickListAcAddCard} disableRipple>
+          Add Card
+        </ButtonListAc>
+        <ButtonListAc onClick={onClickListAcCopy} disableRipple>
+          Copy List
+        </ButtonListAc>
+        <ButtonListAc onClick={onClickListAcDelete} disableRipple>
+          Delete This List
+        </ButtonListAc>
+      </DivActionBt>
+    );
+  };
+  const ListCopy = () => {
+    return (
+      <DivAction>
+        <p>Name</p>
+        <InputCopy
+          placeholder="Input List title ..."
+          value={newList}
+          onChange={onChangeList}
+          maxLength={15}
+          autoFocus
+        />
+        <ButtonCopyAc onClick={onClickAddList}>Create</ButtonCopyAc>
+      </DivAction>
+    );
+  };
+  const ListDelete = () => {
+    return (
+      <DivAction>
+        <PDelete>삭제 후 되돌릴 수 없습니다.</PDelete>
+        <ButtonDeleteAc onClick={onClickDeleteList}>Delete</ButtonDeleteAc>
+      </DivAction>
+    );
+  };
+
+  const ActionTitle = copyAction
+    ? "Copy List"
+    : deleteAction
+    ? "Delete List"
+    : "List Actions";
+
+  return (
+    <>
+      <PaperListAc onMouseLeave={onClickListAcClose}>
+        <TypographyListAc variant="subtitle1">{ActionTitle}</TypographyListAc>
+        <CloseIconListAc onClick={onClickListAcClose} />
+        <HrListAc />
+        {copyAction ? ListCopy() : deleteAction ? ListDelete() : ActionHome()}
+      </PaperListAc>
+    </>
+  );
+};
+```
+
 <br />
 
 ### ListCardAdd
+
+- List와 Card 를 추가할 수 있다.
+- Add List와 Add Card의 Form이 같기 때문에 한 컴포넌트로 만들어 주었다.
+
+![listCardAdd](./img/listCardAdd.gif)
+
+```tsx
+const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
+  const dispatch = useDispatch();
+  const [addInput, setaddInput] = useState(false);
+  const [text, setText] = useState("");
+  const inputEl = useRef<HTMLTextAreaElement>(null);
+
+  const onClickAddCard = () => {
+    if (text !== "") {
+      if (list) {
+        dispatch(addList(text, boardId));
+        onClickClose();
+      } else {
+        dispatch(addCard(text, index, boardId));
+      }
+      setText("");
+    }
+    if (inputEl.current) {
+      inputEl.current.focus();
+    }
+  };
+
+  const placeholder = list ? "Input list..." : "Input card...";
+  const buttonValue = list ? "+ Add a List" : "+ Add a Card";
+  const AddButtonValue = list ? "Add List" : "Add Card";
+  const buttonValueColor = list ? "white" : "black";
+  const BackgroundColor = list ? "rgb(235,236,240)" : "inherit";
+  const InputHeight = list ? "20px" : "60px";
+
+  const AddButton = () => {
+    return (
+      <ButtonLCAc
+        mycolor={buttonValueColor}
+        onClick={onClickOpen}
+        disableRipple
+      >
+        {buttonValue}
+      </ButtonLCAc>
+    );
+  };
+  const AddInput = () => {
+    return (
+      <DivBackGroundColor backgroundColor={BackgroundColor}>
+        <TextareaLCAc
+          height={InputHeight}
+          ref={inputEl}
+          placeholder={placeholder}
+          value={text}
+          onChange={onChangeCard}
+          autoFocus
+        />
+        <ButtonAddLCAc onClick={onClickAddCard}>{AddButtonValue}</ButtonAddLCAc>
+        <CloseIconLCAc onClick={onClickClose} />
+      </DivBackGroundColor>
+    );
+  };
+
+  return addInput ? AddInput() : AddButton();
+};
+```
 
 <br />
 
