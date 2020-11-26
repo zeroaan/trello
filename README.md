@@ -247,6 +247,7 @@ const BoardStarButton: React.FC<Props> = ({ boardStar, boardId }) => {
 - List Title 수정, List Action(Copy, Delete), List Add 등을 할 수 있다.
 
 ![list](./img/list.png)
+
 <br />
 
 ### ListTitle
