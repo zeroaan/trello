@@ -3,6 +3,9 @@
 - https://zeroaan.github.io/trello/
 - 기간 : 20년 11월 11일 ~ 11월 25일
 - 소개 : React, Typescript, Redux를 이용해 Trello를 만들어 보았다.
+  <br />
+
+- Redux를 통해 Trello의 Board, List, Card data를 모두 관리하였고, Drag & Drop 기능을 구현하여 List 간의 Card 이동이 가능하게 하였다.
 
 <br />
 
@@ -243,12 +246,14 @@ const BoardStarButton: React.FC<Props> = ({ boardStar, boardId }) => {
 - 현재 Board에 있는 리스트들을 볼 수 있다.
 - List Title 수정, List Action(Copy, Delete), List Add 등을 할 수 있다.
 
-![listTitle](./img/listTitle.gif)
+![list](./img/list.png)
 <br />
 
 ### ListTitle
 
 - 해당 List의 Title을 변경할 수 있다.
+
+![listTitle](./img/listTitle.gif)
 
 ```tsx
 const ListTitle: React.FC<Props> = ({ title, index, boardId }) => {
@@ -445,6 +450,67 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 
 ### Card
 
+- 해당 List에 있는 Card들을 볼 수 있다.
+- Drag & Drop을 통한 Card 이동, Card Content 수정, Card Delete, Card Add를 할 수 있다.
+
+![card](./img/card.gif)
+
 <br />
 
 ### CardContent
+
+- 해당 Card를 Edit, Delete 할 수 있다.
+
+![cardContent](./img/cardContent.gif)
+
+```tsx
+const CardContent: React.FC<Props> = ({
+  edit,
+  setCardEditBox,
+  list,
+  index,
+  listIndex,
+  boardId,
+}) => {
+  const dispatch = useDispatch();
+
+  const onClickSave = () => {
+    if (editList !== "") {
+      dispatch(editCard(editList, index, listIndex, boardId));
+    }
+    onClickEditClose();
+  };
+  const onClickDelete = () => {
+    dispatch(deleteCard(index, listIndex, boardId));
+    onClickEditClose();
+  };
+
+  const ContentCard = () => {
+    return (
+      <PaperCardContent>
+        <PListText>{list}</PListText>
+        <CreateIconCardContent onClick={onClickEditOpen} />
+      </PaperCardContent>
+    );
+  };
+  const EditCard = () => {
+    return (
+      <>
+        <DivBlack onClick={onClickEditClose}></DivBlack>
+        <DivEmptyBox></DivEmptyBox>
+        <TextareaCardContent
+          placeholder="Input card ..."
+          value={editList}
+          onChange={onChangeEditList}
+          autoFocus
+        />
+        <CloseIconCardContent onClick={onClickEditClose} />
+        <ButtonCardEdit onClick={onClickSave}>Save</ButtonCardEdit>
+        <ButtonCardDelete onClick={onClickDelete}>Delete</ButtonCardDelete>
+      </>
+    );
+  };
+
+  return edit ? EditCard() : ContentCard();
+};
+```
