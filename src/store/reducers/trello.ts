@@ -292,26 +292,17 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
           if (action.droppableIdStart === action.droppableIdEnd) {
-            const list = newBoard[i].lists.find(
-              (list) => action.droppableIdStart === list.id
-            );
+            const list = newBoard[i].lists.find((list) => action.droppableIdStart === list.id);
             if (list) {
               const card = list.cards.splice(action.droppableIndexStart, 1);
               list.cards.splice(action.droppableIndexEnd, 0, ...card);
             }
           }
           if (action.droppableIdStart !== action.droppableIdEnd) {
-            const listStart = newBoard[i].lists.find(
-              (list) => action.droppableIdStart === list.id
-            );
-            const listEnd = newBoard[i].lists.find(
-              (list) => action.droppableIdEnd === list.id
-            );
+            const listStart = newBoard[i].lists.find((list) => action.droppableIdStart === list.id);
+            const listEnd = newBoard[i].lists.find((list) => action.droppableIdEnd === list.id);
             if (listStart && listEnd) {
-              const card = listStart.cards.splice(
-                action.droppableIndexStart,
-                1
-              );
+              const card = listStart.cards.splice(action.droppableIndexStart, 1);
               listEnd.cards.splice(action.droppableIndexEnd, 0, ...card);
             }
           }
@@ -344,8 +335,7 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
       let i = 0;
       while (i < newBoard.length) {
         if (newBoard[i].id === action.boardId) {
-          newBoard[i].lists[action.listIndex].cards[action.index].text =
-            action.newCard;
+          newBoard[i].lists[action.listIndex].cards[action.index].text = action.newCard;
           break;
         }
         i = i + 1;

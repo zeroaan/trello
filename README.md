@@ -17,9 +17,7 @@
 - 현재 가지고 있는 모든 Board들을 볼 수 있으며, 즐겨찾는 Board로 지정해놓은 Starred Boards들도 따로 확인할 수 있다.
 
 ```tsx
-const { boards } = useSelector<RootState, BoardState>(
-  (state: RootState) => state.trello
-);
+const { boards } = useSelector<RootState, BoardState>((state: RootState) => state.trello);
 
 const AllBoards = () => {
   return (
@@ -63,10 +61,11 @@ const StarBoards = () => {
 
 ### Board
 
-- Trello 메인에서 하나의 Board를 클릭하면 볼 수 있는 페이지이다.
-- trello의 기능인 List와 Card 관리가 가능하다.
+- Trello 컴포넌트에서 하나의 Board를 클릭하면 볼 수 있는 페이지이다.
+- trello의 기능인 List와 Card 생성, 수정, 삭제 등 Board 관리를 할 수 있다.
 
 ![board](./assets/board.png)
+
 <br />
 
 ### BoardCreate
@@ -74,44 +73,50 @@ const StarBoards = () => {
 - 새로운 Board를 생성할 수 있다.
 
 ![boardCreate](./assets/boardCreate.gif)
+<br />
+
+##### components/BoardCreate.tsx
+
+- newBoard Text를 입력후 dispatch를 통해 새로운 board 를 추가해주고, useHistory hook를 이용하여 해당 board 페이지로 이동 시켜주었다.
 
 ```tsx
-const BoardCreate: React.FC<Props> = ({ setCreateBoard }) => {
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const { boardId } = useSelector<RootState, BoardState>(
-    (state: RootState) => state.trello
-  );
+const history = useHistory();
+const dispatch = useDispatch();
+const { boardId } = useSelector<RootState, BoardState>((state: RootState) => state.trello);
 
-  const onClickAddBoard = () => {
-    if (newBoard !== "") {
-      onClickClose();
-      dispatch(addBoard(newBoard));
-      history.push(`/board/${boardId}`);
-    }
-  };
-
-  return (
-    <>
-      <DivNewBoard>
-        <CardNewBoard>
-          <H3BoardTitle>New Board</H3BoardTitle>
-          <InputNewBoard
-            placeholder="Input Board Name ..."
-            value={newBoard}
-            onChange={onChangeBoard}
-            maxLength={15}
-            autoFocus
-          />
-          <ButtonNewBoard onClick={onClickAddBoard}>
-            Create a Board
-          </ButtonNewBoard>
-          <CloseIconNewBoard onClick={onClickClose} />
-        </CardNewBoard>
-      </DivNewBoard>
-    </>
-  );
+const onClickAddBoard = () => {
+  if (newBoard !== "") {
+    onClickClose();
+    dispatch(addBoard(newBoard));
+    history.push(`/board/${boardId}`);
+  }
 };
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- reducer에서는 새로운 board에 id, star 여부, boardName 그리고 lists는 기본으로 To do, Doing, Complete list로 만들었다.
+
+```ts
+case ADD_BOARD: {
+  const newBoard: BoardType[] = [
+    ...state.boards,
+    {
+      id: state.boardId,
+      star: false,
+      boardName: action.newBoardName,
+      lists: [
+        { id: `list-${state.listId}`, title: "To do", cards: [] },
+        { id: `list-${state.listId + 1}`, title: "Doing", cards: [] },
+        { id: `list-${state.listId + 2}`, title: "Complete", cards: [] },
+      ],
+    },
+  ];
+  return { ...state, boards: [...newBoard],
+    boardId: state.boardId + 1, listId: state.listId + 3 };
+}
 ```
 
 <br />
@@ -121,48 +126,45 @@ const BoardCreate: React.FC<Props> = ({ setCreateBoard }) => {
 - 현재 Board를 삭제할 수 있다.
 
 ![boardDelete](./assets/boardDelete.gif)
+<br />
+
+##### components/BoardDelete.tsx
+
+- BoardDelete 컴포넌트에서는 Create 할 때 만든 boardId를 dispatch로 전달해주었고, useHistory hook을 이용하여 삭제 후 메인 페이지로 이동할 수 있게 해주었다.
 
 ```tsx
-const BoardDelete: React.FC<Props> = ({ boardId }) => {
-  const history = useHistory();
-  const dispatch = useDispatch();
+const history = useHistory();
+const dispatch = useDispatch();
 
-  const [deleteBox, setDeleteBox] = useState(false);
-
-  const onClickDeleteBoard = () => {
-    dispatch(deleteBoard(boardId));
-    history.push("/");
-  };
-
-  const DeleteButton = () => {
-    return (
-      <>
-        <ButtonBoardDelete onClick={() => setDeleteBox(true)}>
-          <DeleteIcon style={{ fontSize: "20px", color: "white" }} />
-        </ButtonBoardDelete>
-      </>
-    );
-  };
-  const DeleteAction = () => {
-    return (
-      <>
-        {DeleteButton()}
-        <DivBoardDelete>
-          <CardBoardDelete>
-            <H3BoardDelete>Delete Board</H3BoardDelete>
-            <PBoardDelete>삭제 후 되돌릴 수 없습니다.</PBoardDelete>
-            <ButtonBoardDeleteDispatch onClick={onClickDeleteBoard}>
-              Delete This Board
-            </ButtonBoardDeleteDispatch>
-            <CloseIconBoardDelete onClick={() => setDeleteBox(false)} />
-          </CardBoardDelete>
-        </DivBoardDelete>
-      </>
-    );
-  };
-
-  return deleteBox ? DeleteAction() : DeleteButton();
+const onClickDeleteBoard = () => {
+  dispatch(deleteBoard(boardId));
+  history.push("/");
 };
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- reducer에서는 dispatch로 전달받은 boardId와 store에 있는 id가 같을 때 splice 함수를 통해 해당 Board를 제거해주었다.
+- 또한 해당 Board가 starred board 인 경우 starCount도 감소시켜 다른 컴포넌트에 영향이 가지 않도록 해주었다.
+
+```ts
+case DELETE_BOARD: {
+  const newBoard: BoardType[] = [...state.boards];
+  let count = state.starCount;
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      if (newBoard[i].star === true) {
+        count = count - 1;
+      }
+      newBoard.splice(i, 1);
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard], starCount: count };
+}
 ```
 
 <br />
@@ -172,46 +174,42 @@ const BoardDelete: React.FC<Props> = ({ boardId }) => {
 - 현재 Board의 Title를 변경할 수 있다.
 
 ![boardTitle](./assets/boardTitle.gif)
+<br />
+
+##### components/BoardTitle.tsx
+
+- Form에서 입력한 boardText와 현재 boardId를 dispatch로 전달해주었다.
 
 ```tsx
-const BoardTitle: React.FC<Props> = ({ boardName, boardId }) => {
-  const dispatch = useDispatch();
-  const [titleInput, setTitleInput] = useState(false);
+const dispatch = useDispatch();
 
-  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onBlurInput();
-  };
-  const onBlurInput = () => {
-    if (boardText !== "") {
-      dispatch(changeBoardName(boardText, boardId));
-      setTitleInput(false);
-    }
-  };
-
-  const BoardTitleText = () => {
-    return (
-      <TypographyBoardTitle variant="h6" onClick={() => setTitleInput(true)}>
-        {boardName}
-      </TypographyBoardTitle>
-    );
-  };
-  const BoardTitleInput = () => {
-    return (
-      <FormBoardTitle onSubmit={onSubmitForm}>
-        <InputBoardTitle
-          value={boardText}
-          onChange={onChangeName}
-          onBlur={onBlurInput}
-          maxLength={15}
-          autoFocus
-        />
-      </FormBoardTitle>
-    );
-  };
-
-  return titleInput ? BoardTitleInput() : BoardTitleText();
+const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (boardText !== "") {
+    dispatch(changeBoardName(boardText, boardId));
+  }
 };
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- 해당 boardId와 store의 id가 같을 경우, 해당 BoardName을 새로운 BoardName으로 변경해주었다.
+
+```ts
+case CHANGE_BOARD_NAME: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].boardName = action.newBoardName;
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard] };
+}
 ```
 
 <br />
@@ -221,22 +219,42 @@ const BoardTitle: React.FC<Props> = ({ boardName, boardId }) => {
 - 현재 Board를 즐겨찾는 Board로 설정할 수 있다.
 
 ![boardStar](./assets/boardStar.gif)
+<br />
+
+##### components/BoardStar.tsx
+
+- 해당 boardId를 전달해준다.
 
 ```tsx
-const BoardStarButton: React.FC<Props> = ({ boardStar, boardId }) => {
-  const dispatch = useDispatch();
-  const onClickStar = () => {
-    dispatch(starBoard(boardId));
-  };
+const dispatch = useDispatch();
 
-  const StarColor = boardStar ? "yellow" : "white";
-
-  return (
-    <ButtonStar style={{ color: StarColor }} onClick={onClickStar}>
-      ☆
-    </ButtonStar>
-  );
+const onClickStar = () => {
+  dispatch(starBoard(boardId));
 };
+```
+
+<br />
+
+##### store/reducer/trello.ts
+
+- 해당 boardId와 store의 id가 같을 경우, star boolean 값을 반대로 설정해주었고, 전체 board의 star 갯수를 count 해주었다.
+
+```ts
+case STAR_BOARD: {
+  const newBoard: BoardType[] = [...state.boards];
+  let count = 0;
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].star = !newBoard[i].star;
+    }
+    if (newBoard[i].star === true) {
+      count = count + 1;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard], starCount: count };
+}
 ```
 
 <br />
@@ -273,9 +291,7 @@ const ListTitle: React.FC<Props> = ({ title, index, boardId }) => {
   };
 
   const Title = () => {
-    return (
-      <CardHeaderTitle title={title} disableTypography onClick={onClickTitle} />
-    );
+    return <CardHeaderTitle title={title} disableTypography onClick={onClickTitle} />;
   };
   const TitleForm = () => {
     return (
@@ -358,11 +374,7 @@ const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
     );
   };
 
-  const ActionTitle = copyAction
-    ? "Copy List"
-    : deleteAction
-    ? "Delete List"
-    : "List Actions";
+  const ActionTitle = copyAction ? "Copy List" : deleteAction ? "Delete List" : "List Actions";
 
   return (
     <>
@@ -417,11 +429,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 
   const AddButton = () => {
     return (
-      <ButtonLCAc
-        mycolor={buttonValueColor}
-        onClick={onClickOpen}
-        disableRipple
-      >
+      <ButtonLCAc mycolor={buttonValueColor} onClick={onClickOpen} disableRipple>
         {buttonValue}
       </ButtonLCAc>
     );
