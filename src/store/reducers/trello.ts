@@ -352,7 +352,6 @@ const BoardReducer = (state = initialState, action: ListReducerActions) => {
         }
         i = i + 1;
       }
-      console.log(newBoard);
       return { ...state, boards: [...newBoard] };
     }
     default:

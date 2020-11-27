@@ -20,8 +20,8 @@ const DivBackGroundColor = styled.div<{ backgroundColor: string }>`
   background-color: ${(props) => props.backgroundColor};
 `;
 const TextareaLCAc = styled.textarea<{ height: string }>`
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   font-size: 16px;
   outline: none;
   border: none;
@@ -77,7 +77,6 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
   const onChangeCard = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
     setText(value);
-    console.log(value);
   };
   const onClickAddCard = () => {
     if (text !== "") {
@@ -103,11 +102,7 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 
   const AddButton = () => {
     return (
-      <ButtonLCAc
-        mycolor={buttonValueColor}
-        onClick={onClickOpen}
-        disableRipple
-      >
+      <ButtonLCAc mycolor={buttonValueColor} onClick={onClickOpen} disableRipple>
         {buttonValue}
       </ButtonLCAc>
     );
