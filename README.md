@@ -261,8 +261,8 @@ case STAR_BOARD: {
 
 ### List
 
-- 현재 Board에 있는 리스트들을 볼 수 있다.
-- List Title 수정, List Action(Copy, Delete), List Add 등을 할 수 있다.
+- 현재 Board에 있는 리스트들을 볼 수 있다. 기본 List로는 To do, Doing, Complete가 있으며 Add a List를 통해 추가할 수 있다.
+- 또한 List Title 수정, List Action(Copy, Delete), List Add 등을 할 수 있다.
 
 ![list](./assets/list.png)
 
@@ -273,42 +273,42 @@ case STAR_BOARD: {
 - 해당 List의 Title을 변경할 수 있다.
 
 ![listTitle](./assets/listTitle.gif)
+<br />
+
+##### components/ListTitle.tsx
+
+- Form에서 입력한 textTitle과 해당 List의 Index 그리고 현재 boardId를 dispatch로 전달해주었다.
 
 ```tsx
-const ListTitle: React.FC<Props> = ({ title, index, boardId }) => {
-  const dispatch = useDispatch();
-  const [changeTitle, setChangeTitle] = useState(false);
+const dispatch = useDispatch();
 
-  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onBlurInput();
-  };
-  const onBlurInput = () => {
-    if (textTitle !== "") {
-      dispatch(changeListTitle(textTitle, index, boardId));
-    }
-    setChangeTitle(false);
-  };
-
-  const Title = () => {
-    return <CardHeaderTitle title={title} disableTypography onClick={onClickTitle} />;
-  };
-  const TitleForm = () => {
-    return (
-      <form onSubmit={onSubmitForm}>
-        <InputTitle
-          value={textTitle}
-          onChange={onChangeInput}
-          onBlur={onBlurInput}
-          maxLength={15}
-          autoFocus
-        />
-      </form>
-    );
-  };
-
-  return changeTitle ? TitleForm() : Title();
+const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (textTitle !== "") {
+    dispatch(changeListTitle(textTitle, index, boardId));
+  }
 };
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- 전달받은 boardId와 store의 board id가 같으면 해당 Board lists의 index 번째 title을 새로운 title로 변경한다.
+
+```ts
+case CHANGE_LIST_TITLE: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].lists[action.index].title = action.newTitle;
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard] };
+}
 ```
 
 <br />
@@ -318,141 +318,145 @@ const ListTitle: React.FC<Props> = ({ title, index, boardId }) => {
 - 해당 List Action(Add Card, Copy List, Delete List)를 할 수 있다.
 
 ![listAction](./assets/listAction.gif)
+<br />
+
+##### components/ListAction.tsx
+
+- List Copy는 새로운 List Title과 해당 List의 Index 그리고 현재 BoardId를 전달해준다.
+- List Delete는 해당 List의 Index와 현재 BoardId를 전달해준다.
 
 ```tsx
-const ListAction: React.FC<Props> = ({ setActionOpen, index, boardId }) => {
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
-  const onClickAddList = () => {
-    if (newList !== "") {
-      onClickListAcClose();
-      dispatch(copyList(newList, index, boardId));
-      setNewList("");
-    }
-  };
-  const onClickDeleteList = () => {
-    onClickListAcClose();
-    dispatch(deleteList(index, boardId));
-  };
-
-  const ActionHome = () => {
-    return (
-      <DivActionBt>
-        <ButtonListAc onClick={onClickListAcAddCard} disableRipple>
-          Add Card
-        </ButtonListAc>
-        <ButtonListAc onClick={onClickListAcCopy} disableRipple>
-          Copy List
-        </ButtonListAc>
-        <ButtonListAc onClick={onClickListAcDelete} disableRipple>
-          Delete This List
-        </ButtonListAc>
-      </DivActionBt>
-    );
-  };
-  const ListCopy = () => {
-    return (
-      <DivAction>
-        <p>Name</p>
-        <InputCopy
-          placeholder="Input List title ..."
-          value={newList}
-          onChange={onChangeList}
-          maxLength={15}
-          autoFocus
-        />
-        <ButtonCopyAc onClick={onClickAddList}>Create</ButtonCopyAc>
-      </DivAction>
-    );
-  };
-  const ListDelete = () => {
-    return (
-      <DivAction>
-        <PDelete>삭제 후 되돌릴 수 없습니다.</PDelete>
-        <ButtonDeleteAc onClick={onClickDeleteList}>Delete</ButtonDeleteAc>
-      </DivAction>
-    );
-  };
-
-  const ActionTitle = copyAction ? "Copy List" : deleteAction ? "Delete List" : "List Actions";
-
-  return (
-    <>
-      <PaperListAc onMouseLeave={onClickListAcClose}>
-        <TypographyListAc variant="subtitle1">{ActionTitle}</TypographyListAc>
-        <CloseIconListAc onClick={onClickListAcClose} />
-        <HrListAc />
-        {copyAction ? ListCopy() : deleteAction ? ListDelete() : ActionHome()}
-      </PaperListAc>
-    </>
-  );
+const onClickAddList = () => {
+  if (newList !== "") {
+    dispatch(copyList(newList, index, boardId));
+  }
 };
+const onClickDeleteList = () => {
+  dispatch(deleteList(index, boardId));
+};
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- List Copy는 전달받은 boardId와 store의 board id가 같을 때 해당 board의 index번째 list, card를 복사하고 List를 새로 생성해준다.
+- List Delete는 해당 board의 index 번째 List를 제거한다.
+
+```ts
+case COPY_LIST: {
+      const newBoard: BoardType[] = [...state.boards];
+      let newCardId = state.cardId;
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          const newCard = [...newBoard[i].lists[action.index].cards];
+          newCardId += newCard.length;
+          let j = 0;
+          while (j < newCard.length) {
+            newCard[j] = { ...newCard[j], id: `card-${state.cardId + j}` };
+            j = j + 1;
+          }
+          newBoard[i].lists.splice(action.index + 1, 0, {
+            id: `list-${state.listId}`,
+            title: action.title,
+            cards: [...newCard],
+          });
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard], listId: state.listId + 1, cardId: newCardId };
+    }
+
+    case DELETE_LIST: {
+      const newBoard: BoardType[] = [...state.boards];
+      let i = 0;
+      while (i < newBoard.length) {
+        if (newBoard[i].id === action.boardId) {
+          newBoard[i].lists.splice(action.index, 1);
+          break;
+        }
+        i = i + 1;
+      }
+      return { ...state, boards: [...newBoard] };
+    }
 ```
 
 <br />
 
 ### ListCardAdd
 
-- List와 Card 를 추가할 수 있다.
-- Add List와 Add Card의 Form이 같기 때문에 한 컴포넌트로 만들어 주었다.
+- 새로운 List와 Card 를 추가할 수 있다.
+- Add List와 Add Card의 Form이 동일하기 때문에 하나의 컴포넌트로 만들어 주었다.
 
 ![listCardAdd](./assets/listCardAdd.gif)
+<br />
+
+##### components/ListCardAdd.tsx
+
+- props로 list를 전달받아 true일 경우 addList로 false일 경우 addCard로 dispatch 해주었다.
+- List의 경우 Title text와 현재 boardId를 전달해주었고, Card의 경우 card text와 현재 list의 index 그리고 현재 boardId를 전달해주었다.
 
 ```tsx
-const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
-  const dispatch = useDispatch();
-  const [addInput, setaddInput] = useState(false);
-  const [text, setText] = useState("");
-  const inputEl = useRef<HTMLTextAreaElement>(null);
+const dispatch = useDispatch();
+const inputEl = useRef<HTMLTextAreaElement>(null);
 
-  const onClickAddCard = () => {
-    if (text !== "") {
-      if (list) {
-        dispatch(addList(text, boardId));
-        onClickClose();
-      } else {
-        dispatch(addCard(text, index, boardId));
-      }
-      setText("");
+const onClickAddCard = () => {
+  if (text !== "") {
+    if (list) {
+      dispatch(addList(text, boardId));
+    } else {
+      dispatch(addCard(text, index, boardId));
     }
-    if (inputEl.current) {
-      inputEl.current.focus();
-    }
-  };
-
-  const placeholder = list ? "Input list..." : "Input card...";
-  const buttonValue = list ? "+ Add a List" : "+ Add a Card";
-  const AddButtonValue = list ? "Add List" : "Add Card";
-  const buttonValueColor = list ? "white" : "black";
-  const BackgroundColor = list ? "rgb(235,236,240)" : "inherit";
-  const InputHeight = list ? "20px" : "60px";
-
-  const AddButton = () => {
-    return (
-      <ButtonLCAc mycolor={buttonValueColor} onClick={onClickOpen} disableRipple>
-        {buttonValue}
-      </ButtonLCAc>
-    );
-  };
-  const AddInput = () => {
-    return (
-      <DivBackGroundColor backgroundColor={BackgroundColor}>
-        <TextareaLCAc
-          height={InputHeight}
-          ref={inputEl}
-          placeholder={placeholder}
-          value={text}
-          onChange={onChangeCard}
-          autoFocus
-        />
-        <ButtonAddLCAc onClick={onClickAddCard}>{AddButtonValue}</ButtonAddLCAc>
-        <CloseIconLCAc onClick={onClickClose} />
-      </DivBackGroundColor>
-    );
-  };
-
-  return addInput ? AddInput() : AddButton();
+  }
+  if (inputEl.current) {
+    inputEl.current.focus();
+  }
 };
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- List Add는 해당 Board에서 전달받은 title과 빈 Card를 만들어주었다.
+- Card Add는 해당 Board에서 index 번째의 List에 새로운 Card를 만들어주었다.
+
+```ts
+case ADD_LIST: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].lists = [
+        ...newBoard[i].lists,
+        { id: `list-${state.listId}`, title: action.title, cards: [] },
+      ];
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard], listId: state.listId + 1 };
+}
+
+case ADD_CARD: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].lists[action.index].cards = [
+        ...newBoard[i].lists[action.index].cards,
+        { id: `card-${state.cardId}`, text: action.card },
+      ];
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard], cardId: state.cardId + 1 };
+}
 ```
 
 <br />
@@ -471,55 +475,57 @@ const ListCardAdd: React.FC<Props> = ({ list, index, boardId }) => {
 - 해당 Card를 Edit, Delete 할 수 있다.
 
 ![cardContent](./assets/cardContent.gif)
+<br/>
+
+##### components/CardContent.tsx
+
+- Card를 수정할 수 있는 editCard와 삭제할 수 있는 deleteCard를 dispatch 해주었다.
+- Card Edit은 새로운 Card text와 현재 Card의 index 현재 List의 index 그리고 현재 boardId를 전달해주었다.
+- Card Delete도 마찬가지로 현재 Card의 index 현재 List의 index 그리고 현재 boardId를 전달해주었다.
 
 ```tsx
-const CardContent: React.FC<Props> = ({
-  edit,
-  setCardEditBox,
-  list,
-  index,
-  listIndex,
-  boardId,
-}) => {
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
-  const onClickSave = () => {
-    if (editList !== "") {
-      dispatch(editCard(editList, index, listIndex, boardId));
-    }
-    onClickEditClose();
-  };
-  const onClickDelete = () => {
-    dispatch(deleteCard(index, listIndex, boardId));
-    onClickEditClose();
-  };
-
-  const ContentCard = () => {
-    return (
-      <PaperCardContent>
-        <PListText>{list}</PListText>
-        <CreateIconCardContent onClick={onClickEditOpen} />
-      </PaperCardContent>
-    );
-  };
-  const EditCard = () => {
-    return (
-      <>
-        <DivBlack onClick={onClickEditClose}></DivBlack>
-        <DivEmptyBox></DivEmptyBox>
-        <TextareaCardContent
-          placeholder="Input card ..."
-          value={editList}
-          onChange={onChangeEditList}
-          autoFocus
-        />
-        <CloseIconCardContent onClick={onClickEditClose} />
-        <ButtonCardEdit onClick={onClickSave}>Save</ButtonCardEdit>
-        <ButtonCardDelete onClick={onClickDelete}>Delete</ButtonCardDelete>
-      </>
-    );
-  };
-
-  return edit ? EditCard() : ContentCard();
+const onClickSave = () => {
+  if (editList !== "") {
+    dispatch(editCard(editList, index, listIndex, boardId));
+  }
 };
+const onClickDelete = () => {
+  dispatch(deleteCard(index, listIndex, boardId));
+};
+```
+
+<br />
+
+##### store/reducers/trello.ts
+
+- Card Edit은 해당 Board에서 listIndex번째의 List, 그리고 index번째의 Card의 Text를 새로운 Text로 변경해주었다.
+- Card Delete는 Board에서 listIndex번째의 List, 그리고 index번째의 Card를 splice 함수를 통해 제거해주었다.
+
+```ts
+case EDIT_CARD: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].lists[action.listIndex].cards[action.index].text = action.newCard;
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard] };
+}
+case DELETE_CARD: {
+  const newBoard: BoardType[] = [...state.boards];
+  let i = 0;
+  while (i < newBoard.length) {
+    if (newBoard[i].id === action.boardId) {
+      newBoard[i].lists[action.listIndex].cards.splice(action.index, 1);
+      break;
+    }
+    i = i + 1;
+  }
+  return { ...state, boards: [...newBoard] };
+}
 ```
