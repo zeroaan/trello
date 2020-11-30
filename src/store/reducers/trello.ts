@@ -128,7 +128,7 @@ const initialState: BoardState = {
   ],
 };
 
-type ListReducerActions =
+export type ReducerActions =
   | ChangeBoardNameAction
   | AddBoardAction
   | StarBoardAction
@@ -141,7 +141,7 @@ type ListReducerActions =
   | AddCardAction
   | EditCardAction
   | DeleteCardAction;
-const BoardReducer = (state = initialState, action: ListReducerActions) => {
+const BoardReducer = (state = initialState, action: ReducerActions) => {
   switch (action.type) {
     case CHANGE_BOARD_NAME: {
       const newBoard: BoardType[] = [...state.boards];
